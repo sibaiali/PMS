@@ -135,6 +135,13 @@ python -m venv .venv
 pip install -r requirements.txt
 ```
 
+### Run the 60-FPS Automotive Digital Twin & Live Python Web Command Center
+
+```bash
+python -m smartpark --web --port 8080
+```
+Then open **`http://localhost:8080/`** in your browser (or visit the live cloud deployment at **[https://alisibai.vercel.app/smartpark.html](https://alisibai.vercel.app/smartpark.html)**).
+
 ### Run the 12-Screen Desktop Application (GUI)
 
 ```bash
