@@ -1,0 +1,46 @@
+{
+  "facility_name": "SmartPark Guardian Garage — Berlin Mitte (Simulated)",
+  "database_path": ":memory:",
+  "simulation_mode": true,
+  "default_barrier_free": true,
+  "badge_ttl_seconds": 300,
+  "digital_key_challenge_ttl_seconds": 60,
+  "digital_key_rate_limit_per_minute": 5,
+  "duplicate_recognition_window_seconds": 15,
+  "notification_cooldown_seconds": 120,
+  "notification_max_per_hour": 10,
+  "tariff": {
+    "currency": "EUR",
+    "timezone": "Europe/Berlin",
+    "hourly_rate": "4.00",
+    "minute_rate": "0.08",
+    "use_minute_granularity": true,
+    "peak_multiplier": "1.50",
+    "off_peak_multiplier": "0.85",
+    "peak_start_hour": 8,
+    "peak_end_hour": 19,
+    "grace_period_minutes": 15,
+    "max_daily_fee": "28.00",
+    "ev_charging_surcharge_per_hour": "2.50",
+    "validated_visit_discount_pct": "50.0",
+    "subscription_covered": true
+  },
+  "allocation_weights": {
+    "walking_distance_weight": 0.30,
+    "congestion_weight": 0.20,
+    "exit_distance_weight": 0.15,
+    "size_fit_weight": 0.15,
+    "safety_margin_weight": 0.20,
+    "ev_match_bonus": 25.0,
+    "accessible_match_bonus": 40.0,
+    "reservation_match_bonus": 50.0,
+    "blind_corner_penalty": 12.0
+  },
+  "retention_policy": {
+    "access_logs_days": 30,
+    "sensor_events_days": 14,
+    "resolved_incidents_days": 90,
+    "expired_tokens_days": 7,
+    "billing_records_days": 3650
+  }
+}

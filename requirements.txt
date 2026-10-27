@@ -1,0 +1,4 @@
+# Core application runs on Python 3.11+ standard library (sqlite3, tkinter, decimal, unittest, zoneinfo).
+# Pinning tzdata (for IANA timezones on Windows) and pillow (for simulation PNG snapshot exports):
+tzdata>=2024.1
+pillow>=10.0.0

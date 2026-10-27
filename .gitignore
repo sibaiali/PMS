@@ -1,0 +1,30 @@
+# Python bytecode & caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local databases & runtime logs (never commit customer or private database files)
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+*.log
+
+# Secrets & local environment overrides
+.env
+.env.*
+config.local.json
+
+# Packaging / build artifacts
+build/
+dist/
+*.egg-info/

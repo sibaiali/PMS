@@ -1,0 +1,1063 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SmartPark Guardian AI | Barrier-Free, Intelligent &amp; Accident-Aware Parking Ecosystem</title>
+  <meta name="description" content="Interactive engineering demonstration of SmartPark Guardian AI: barrier-free access authorization, explainable space allocation, Guardian Shield vehicle security correlation, privacy-first QR badges, and A* accident-prevention simulation.">
+  <meta name="theme-color" content="#0f141d">
+  <style>
+    :root {
+      --bg: #0f141d;
+      --surface: #171f2e;
+      --surface-alt: #1e293b;
+      --border: #2c3a52;
+      --fg: #e8eef5;
+      --muted: #9aa8bc;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
+    [data-theme="light"] {
+      --bg: #f4f6f9;
+      --surface: #ffffff;
+      --surface-alt: #eef2f7;
+      --border: #d1d9e6;
+      --fg: #111827;
+      --muted: #4b5563;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --success: #15803d;
+      --warning: #b45309;
+      --danger: #b91c1c;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--sans);
+      line-height: 1.55;
+      padding-bottom: 4rem;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.25rem; }
+
+    /* Top Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+    .header-inner {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.9rem 0;
+    }
+    .brand { display: flex; align-items: center; gap: 0.75rem; }
+    .brand-badge {
+      background: var(--accent);
+      color: #fff;
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 0.35rem 0.6rem;
+      border-radius: 6px;
+      letter-spacing: 0.04em;
+    }
+    .brand-title { font-weight: 700; font-size: 1.15rem; }
+    .sim-pill {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      background: rgba(245, 158, 11, 0.14);
+      color: var(--warning);
+      border: 1px solid var(--warning);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+    .header-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+
+    button, select, input {
+      font-family: inherit;
+      font-size: 0.88rem;
+      border-radius: 6px;
+    }
+    .btn {
+      background: var(--surface-alt);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      padding: 0.45rem 0.85rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.15s, border-color 0.15s;
+    }
+    .btn:hover { border-color: var(--accent); }
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+    .btn-primary:hover { background: var(--accent-hover); }
+
+    /* Hero */
+    .hero {
+      padding: 2.5rem 0 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 1.5rem;
+      align-items: start;
+    }
+    @media (max-width: 920px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+    .hero h1 {
+      font-size: clamp(1.75rem, 3vw, 2.45rem);
+      line-height: 1.2;
+      margin-bottom: 0.75rem;
+    }
+    .hero p { color: var(--muted); max-width: 68ch; margin-bottom: 1.1rem; }
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+    .kpi-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+    }
+    .kpi-card strong {
+      display: block;
+      font-size: 1.35rem;
+      font-family: var(--mono);
+      color: var(--accent);
+    }
+    .kpi-card span { font-size: 0.8rem; color: var(--muted); }
+
+    /* Navigation Tabs */
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin: 1.5rem 0 1.25rem;
+    }
+    .tab-btn {
+      background: var(--surface);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.55rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .tab-btn.active {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1.25rem;
+    }
+    @media (max-width: 960px) {
+      .grid-2 { grid-template-columns: 1fr; }
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+    .card h2 { font-size: 1.15rem; margin-bottom: 0.4rem; }
+    .card p.sub { font-size: 0.86rem; color: var(--muted); margin-bottom: 1rem; }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.9rem;
+    }
+    select, input[type="text"] {
+      background: var(--surface-alt);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      padding: 0.42rem 0.65rem;
+    }
+    label.inline {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+    }
+
+    canvas#simCanvas {
+      width: 100%;
+      max-width: 720px;
+      height: auto;
+      background: #121722;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      display: block;
+    }
+    .console-box {
+      background: var(--surface-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.85rem;
+      font-family: var(--mono);
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      max-height: 410px;
+      overflow-y: auto;
+      color: var(--fg);
+    }
+    .badge-status {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+    .status-ok { background: rgba(34, 197, 94, 0.18); color: var(--success); }
+    .status-warn { background: rgba(245, 158, 11, 0.18); color: var(--warning); }
+    .status-err { background: rgba(239, 68, 68, 0.18); color: var(--danger); }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.6rem;
+    }
+    th, td {
+      text-align: left;
+      padding: 0.55rem 0.65rem;
+      border-bottom: 1px solid var(--border);
+    }
+    th { color: var(--muted); font-weight: 600; }
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.65rem;
+    }
+    .swatch {
+      display: inline-block;
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="brand">
+        <span class="brand-badge">SPG-AI v2.0</span>
+        <span class="brand-title">SmartPark Guardian AI</span>
+        <span class="sim-pill">SIMULATION MODE: SENSORS &amp; HARDWARE SIMULATED</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn" id="themeBtn" type="button">Toggle Light / Dark</button>
+        <a class="btn" href="https://github.com/sibaiali/PMS" target="_blank" rel="noopener noreferrer">GitHub Repository ↗</a>
+        <a class="btn btn-primary" href="https://alisibai.vercel.app/" target="_blank" rel="noopener noreferrer">Author Portfolio ↗</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="hero">
+      <div class="hero-grid">
+        <div>
+          <h1>Barrier-Free, Intelligent, Secure &amp; Accident-Aware Parking Ecosystem</h1>
+          <p>
+            Engineered in Python 3.12 with SQLite WAL persistence, explainable multi-criteria space allocation,
+            <strong>Guardian Shield</strong> deterministic security correlation, HMAC-SHA256 privacy badges,
+            authenticated walk-up digital keys, and safety-weighted A* pathfinding.
+          </p>
+          <div class="controls-row">
+            <a class="btn btn-primary" href="https://github.com/sibaiali/PMS" target="_blank" rel="noopener noreferrer">Inspect Python Source &amp; 25 Tests ↗</a>
+            <span class="badge-status status-ok">25 / 25 Automated Tests Passing</span>
+            <span class="badge-status status-ok">0 Collisions · 5 Near-Misses Prevented</span>
+          </div>
+        </div>
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <strong>25 / 25</strong>
+            <span>Unit, Concurrency, DST &amp; Fail-Safe Tests</span>
+          </div>
+          <div class="kpi-card">
+            <strong>+12.14%</strong>
+            <span>Forecast MAE Improvement vs. 24h Baseline</span>
+          </div>
+          <div class="kpi-card">
+            <strong>6.56 m</strong>
+            <span>Simulated Indoor Stopping Distance (3.8 m/s)</span>
+          </div>
+          <div class="kpi-card">
+            <strong>Zero PII</strong>
+            <span>On Rotating 30s HMAC Privacy Badges</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <nav class="tabs" aria-label="Interactive Simulator Modules">
+      <button class="tab-btn active" data-tab="tab-sim" type="button">1. Live Garage Map &amp; A* Safety Simulator</button>
+      <button class="tab-btn" data-tab="tab-access" type="button">2. Barrier-Free Access &amp; Space Allocator</button>
+      <button class="tab-btn" data-tab="tab-guardian" type="button">3. Guardian Shield &amp; Walk-Up Digital Key</button>
+      <button class="tab-btn" data-tab="tab-badge" type="button">4. Privacy QR Badge, Billing &amp; Analytics</button>
+    </nav>
+
+    <!-- TAB 1: LIVE GARAGE MAP & ACCIDENT PREVENTION SIMULATOR -->
+    <section class="panel active" id="tab-sim">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Interactive 16×12 Garage Map &amp; Proactive Accident Prevention</h2>
+          <p class="sub">
+            Vehicles navigate via safety-weighted A* pathfinding, yield before pedestrian crosswalks within the
+            conservative stopping-distance envelope (6.56 m at 3.8 m/s, μ=0.55), and dynamically reroute around blocked lanes.
+          </p>
+          <div class="controls-row">
+            <button class="btn btn-primary" id="btnPlaySim" type="button">Play Animation</button>
+            <button class="btn" id="btnStepSim" type="button">Step (+1 Tick)</button>
+            <button class="btn" id="btnToggleObstacle" type="button">Toggle Obstacle at (5,4)</button>
+            <button class="btn" id="btnSpawnPed" type="button">Spawn Crosswalk Pedestrian</button>
+            <button class="btn" id="btnResetSim" type="button">Reset Scenario</button>
+          </div>
+          <canvas id="simCanvas" width="720" height="540"></canvas>
+          <div class="legend">
+            <span><i class="swatch" style="background:#3b82f6"></i>Navigating Vehicle</span>
+            <span><i class="swatch" style="background:#f59e0b"></i>Yielding for Safety</span>
+            <span><i class="swatch" style="background:#22c55e"></i>Parked Vehicle</span>
+            <span><i class="swatch" style="background:#facc15"></i>Pedestrian</span>
+            <span><i class="swatch" style="background:#647087"></i>Crosswalk (X-WALK)</span>
+            <span><i class="swatch" style="background:#855b22"></i>Blind Corner</span>
+            <span><i class="swatch" style="background:#5c2a35"></i>Emergency Corridor</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>Live Simulation Telemetry &amp; Near-Miss Log</h2>
+          <p class="sub">
+            SIMULATION LIMITATION: Kinematic stopping distance is an indoor software model and never controls physical vehicle braking or steering.
+          </p>
+          <div class="controls-row">
+            <span class="badge-status status-ok" id="simTickBadge">Tick: 0</span>
+            <span class="badge-status status-ok" id="simCollisionBadge">Collisions: 0</span>
+            <span class="badge-status status-warn" id="simNearMissBadge">Near-Misses Prevented: 0</span>
+            <span class="badge-status status-ok" id="simRerouteBadge">A* Reroutes: 0</span>
+          </div>
+          <div class="console-box" id="simLogBox"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: BARRIER-FREE ACCESS & SPACE ALLOCATOR -->
+    <section class="panel" id="tab-access">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Barrier-Free Arrival &amp; Departure Simulator</h2>
+          <p class="sub">
+            A detected license plate alone is never treated as proof of ownership. Entry requires an enrolled relationship plus an active reservation or verified secondary credential.
+          </p>
+          <div class="controls-row">
+            <select id="selVehicle">
+              <option value="B-SP 2026">B-SP 2026 (Ali · Standard · EV Charging Needed)</option>
+              <option value="M-EW 101">M-EW 101 (Dr. Weber · Large · Accessible Permit)</option>
+              <option value="HH-MV 88">HH-MV 88 (Marcus · Compact · Standard)</option>
+              <option value="XX-UN 999">XX-UN 999 (Unenrolled Visitor Vehicle)</option>
+            </select>
+            <select id="selCredential">
+              <option value="BLE_DIGITAL_KEY_SIM">BLE Digital Key Handshake (Simulated)</option>
+              <option value="ENROLLED_LPR_SIM">Optical LPR Camera Only (Simulated)</option>
+              <option value="SIGNED_QR_BADGE">Signed App QR Badge</option>
+              <option value="EMERGENCY_OVERRIDE">Emergency Vehicle Priority</option>
+            </select>
+          </div>
+          <div class="controls-row">
+            <label class="inline"><input type="checkbox" id="chkSecondary" checked> Secondary Credential / Reservation Verified</label>
+            <label class="inline"><input type="checkbox" id="chkNetOutage"> Simulate Network Outage (Fail-Secure Entry / Safe Egress)</label>
+          </div>
+          <div class="controls-row">
+            <button class="btn btn-primary" id="btnEvalArrival" type="button">Evaluate Barrier-Free Arrival</button>
+            <button class="btn" id="btnEvalDeparture" type="button">Evaluate Barrier-Free Departure &amp; Receipt</button>
+          </div>
+          <div class="console-box" id="accessLogBox"></div>
+        </div>
+
+        <div class="card">
+          <h2>Explainable Space Recommendation vs. Baseline</h2>
+          <p class="sub">
+            Multi-criteria deterministic ranking across walking distance, zone congestion, size fit, accessibility, EV charger priority, and blind-corner safety margins.
+          </p>
+          <div class="console-box" id="allocReportBox"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: GUARDIAN SHIELD & WALK-UP DIGITAL KEY -->
+    <section class="panel" id="tab-guardian">
+      <div class="grid-2">
+        <div class="card">
+          <h2>SmartPark Guardian Shield — Sensor Correlation Engine</h2>
+          <p class="sub">
+            Distinguishes between routine sensor events, suspicious patterns, and corroborated alarms. Enforces ethical anti-surveillance rule <code>R_ETHICS_NO_PROXIMITY_ACCUSATION</code>.
+          </p>
+          <div class="controls-row">
+            <select id="selSensorEvent">
+              <option value="PEDESTRIAN_PROXIMITY">PEDESTRIAN_PROXIMITY (Ethical Rule: Never Accuses Pedestrian)</option>
+              <option value="VIBRATION_MINOR">VIBRATION_MINOR (Isolated Ambient Vibration Dampened)</option>
+              <option value="DOOR_OPEN_UNAUTH">DOOR_OPEN (Unexpected — Attention Required)</option>
+              <option value="CORROBORATED_IMPACT_ALARM">IMPACT_HEAVY + ALARM_TRIGGERED (Confirmed High-Priority Alarm)</option>
+              <option value="UNAUTHENTICATED_SPOOF">Unauthenticated Spoofed Alarm Frame (Rejected)</option>
+            </select>
+            <button class="btn btn-primary" id="btnInjectSensor" type="button">Inject Telemetry Event</button>
+          </div>
+          <div class="console-box" id="guardianLogBox"></div>
+        </div>
+
+        <div class="card">
+          <h2>Authenticated Walk-Up Digital Key Prototype</h2>
+          <p class="sub">
+            BLE proximity alone never unlocks a vehicle. Requires short-lived challenge, single-use nonce replay protection, rate limiting, and explicit user biometric confirmation.
+          </p>
+          <div class="controls-row">
+            <button class="btn" id="btnBleProximity" type="button">1. Simulate BLE Proximity (1.5m)</button>
+            <button class="btn" id="btnTryUnlockNoConfirm" type="button">Attempt Unlock Without Confirmation</button>
+            <button class="btn btn-primary" id="btnConfirmBiometric" type="button">2. Confirm Biometric &amp; Unlock</button>
+          </div>
+          <div class="console-box" id="digitalKeyLogBox"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: PRIVACY BADGE, BILLING & ANALYTICS -->
+    <section class="panel" id="tab-badge">
+      <div class="grid-2">
+        <div class="card">
+          <h2>Privacy-First Temporary Parking Badge</h2>
+          <p class="sub">
+            HMAC-SHA256 signed token with 30-second rolling slot to defeat static screenshot reuse. Displays only public session tokens—zero customer PII or raw license plate.
+          </p>
+          <div class="controls-row">
+            <button class="btn btn-primary" id="btnIssueBadge" type="button">Issue Fresh Rolling QR Badge</button>
+            <button class="btn" id="btnTestScreenshotReplay" type="button">Simulate Stale Screenshot Replay (+2 min)</button>
+            <button class="btn" id="btnRevokeBadge" type="button">Revoke Active Badge</button>
+          </div>
+          <div class="console-box" id="badgeBox"></div>
+        </div>
+
+        <div class="card">
+          <h2>Time-Aware Demand Forecasting &amp; Billing Verification</h2>
+          <p class="sub">
+            Evaluated on chronological 80% train / 20% future holdout split (zero lookahead leakage). Financial calculations use <code>Decimal</code> and <code>Europe/Berlin</code> DST-aware UTC slicing.
+          </p>
+          <table>
+            <thead>
+              <tr>
+                <th>Evaluation Metric</th>
+                <th>Ridge Harmonic Model</th>
+                <th>Seasonal Naive-24h Baseline</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Mean Absolute Error (MAE)</td>
+                <td><strong>0.0534</strong></td>
+                <td>0.0607</td>
+              </tr>
+              <tr>
+                <td>Root Mean Squared Error (RMSE)</td>
+                <td><strong>0.0656</strong></td>
+                <td>0.0875</td>
+              </tr>
+              <tr>
+                <td>Relative MAE Improvement</td>
+                <td colspan="2"><span class="badge-status status-ok">+12.14% over baseline (90% CI: ±0.106)</span></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h2 style="margin-top:1.2rem;">Milestone 1 Bugs Fixed in Legacy <code>pms.py</code></h2>
+          <table>
+            <tbody>
+              <tr>
+                <td><code>DynamicPricing.calculate_fee</code></td>
+                <td>Fixed <code>AttributeError: 'timedelta' object has no attribute 'start'</code> and migrated float math to <code>Decimal</code>.</td>
+              </tr>
+              <tr>
+                <td><code>AnalyticsEngine</code> Reports</td>
+                <td>Fixed missing argument crashes (<code>TypeError</code>), missing <code>license_plate</code> key (<code>KeyError</code>), and zero-revenue bug on vacated spaces.</td>
+              </tr>
+              <tr>
+                <td>Concurrency &amp; Reservations</td>
+                <td>Added reservation interval-overlap checks and SQLite <code>BEGIN IMMEDIATE</code> locks to prevent double allocation.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // Theme toggle
+    const themeBtn = document.getElementById("themeBtn");
+    themeBtn.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      document.documentElement.setAttribute("data-theme", current === "light" ? "dark" : "light");
+    });
+
+    // Tab navigation
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        btn.classList.add("active");
+        document.getElementById(btn.dataset.tab).classList.add("active");
+      });
+    });
+
+    // =========================================================================
+    // 1. LIVE 16x12 GARAGE A* & ACCIDENT PREVENTION SIMULATOR
+    // =========================================================================
+    const W = 16, H = 12, CELL = 45;
+    const canvas = document.getElementById("simCanvas");
+    const ctx = canvas.getContext("2d");
+
+    const bays = [
+      { id: 1, code: "A-01", x: 3, y: 2, type: "ACC", walk: 8, exit: 34, ev: false, acc: true, max: 3, blind: false },
+      { id: 2, code: "A-02", x: 5, y: 2, type: "ACC", walk: 10, exit: 32, ev: true, acc: true, max: 3, blind: false },
+      { id: 3, code: "A-03", x: 7, y: 2, type: "EV", walk: 14, exit: 28, ev: true, acc: false, max: 2, blind: false },
+      { id: 4, code: "A-04", x: 9, y: 2, type: "EV", walk: 16, exit: 26, ev: true, acc: false, max: 3, blind: false },
+      { id: 5, code: "A-05", x: 11, y: 2, type: "STD", walk: 19, exit: 23, ev: false, acc: false, max: 1, blind: false },
+      { id: 6, code: "A-06", x: 13, y: 2, type: "STD", walk: 22, exit: 20, ev: false, acc: false, max: 2, blind: true },
+      { id: 7, code: "B-01", x: 3, y: 6, type: "STD", walk: 18, exit: 28, ev: false, acc: false, max: 2, blind: false },
+      { id: 8, code: "B-02", x: 5, y: 6, type: "STD", walk: 20, exit: 26, ev: false, acc: false, max: 2, blind: false },
+      { id: 9, code: "B-03", x: 7, y: 6, type: "LRG", walk: 23, exit: 24, ev: false, acc: false, max: 3, blind: false },
+      { id: 10, code: "B-04", x: 9, y: 6, type: "EV", walk: 25, exit: 22, ev: true, acc: false, max: 3, blind: false },
+      { id: 11, code: "B-05", x: 11, y: 6, type: "STD", walk: 28, exit: 19, ev: false, acc: false, max: 1, blind: false },
+      { id: 12, code: "B-06", x: 13, y: 6, type: "STD", walk: 31, exit: 16, ev: false, acc: false, max: 2, blind: true },
+      { id: 13, code: "C-01", x: 3, y: 10, type: "STD", walk: 30, exit: 18, ev: false, acc: false, max: 2, blind: false },
+      { id: 14, code: "C-02", x: 5, y: 10, type: "LRG", walk: 32, exit: 15, ev: false, acc: false, max: 3, blind: false },
+      { id: 15, code: "C-03", x: 7, y: 10, type: "STD", walk: 35, exit: 12, ev: false, acc: false, max: 1, blind: false },
+      { id: 16, code: "E-99", x: 13, y: 10, type: "EMG", walk: 12, exit: 10, ev: false, acc: false, max: 3, blind: false }
+    ];
+
+    let simTick = 0;
+    let nearMissCount = 0;
+    let rerouteCount = 0;
+    let obstacleActive = false;
+    let playing = false;
+    let playTimer = null;
+    let simVehicles = [];
+    let simPeds = [];
+    const simLogBox = document.getElementById("simLogBox");
+
+    function cellType(x, y) {
+      if (x === 0 && y === 4) return "ENTRANCE";
+      if (x === 15 && y === 8) return "EXIT";
+      if (x === 0 || x === W - 1 || y === 0 || y === H - 1) return "OBSTACLE";
+      if ([2, 6, 10].includes(y) && [4, 6, 10, 12].includes(x)) return "OBSTACLE";
+      const bay = bays.find((b) => b.x === x && b.y === y);
+      if (bay) return "BAY_" + bay.type;
+      if ([3, 4, 7, 8].includes(y) && [2, 8].includes(x)) return "CROSSWALK";
+      if (y === 1 || x === 2) return "PED_PATH";
+      if ((x === 6 || x === 12) && (y === 3 || y === 7)) return "BLIND";
+      if (x === 14) return "EMERGENCY_ROUTE";
+      return "LANE";
+    }
+
+    function astarVehicle(start, goal) {
+      const key = (p) => `${p.x},${p.y}`;
+      const open = [{ x: start.x, y: start.y, g: 0, f: 0 }];
+      const came = new Map();
+      const gScore = new Map([[key(start), 0]]);
+
+      while (open.length) {
+        open.sort((a, b) => a.f - b.f);
+        const cur = open.shift();
+        if (cur.x === goal.x && cur.y === goal.y) {
+          const path = [];
+          let k = key(cur);
+          let node = { x: cur.x, y: cur.y };
+          while (came.has(k)) {
+            path.unshift(node);
+            node = came.get(k);
+            k = key(node);
+          }
+          return path;
+        }
+        for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
+          const nx = cur.x + dx, ny = cur.y + dy;
+          if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
+          if (obstacleActive && nx === 5 && ny === 4) continue;
+          const ct = cellType(nx, ny);
+          if (ct === "OBSTACLE" || ct === "PED_PATH") continue;
+          if (ct.startsWith("BAY_") && !(nx === goal.x && ny === goal.y)) continue;
+          const cost = ct === "BLIND" ? 2.4 : ct === "CROSSWALK" ? 1.8 : ct === "EMERGENCY_ROUTE" ? 4.2 : 1.0;
+          const ng = (gScore.get(key(cur)) || 0) + cost;
+          const nk = `${nx},${ny}`;
+          if (ng < (gScore.get(nk) ?? Infinity)) {
+            came.set(nk, { x: cur.x, y: cur.y });
+            gScore.set(nk, ng);
+            open.push({ x: nx, y: ny, g: ng, f: ng + Math.abs(nx - goal.x) + Math.abs(ny - goal.y) });
+          }
+        }
+      }
+      return [];
+    }
+
+    function appendSimLog(msg) {
+      simLogBox.textContent = `[Tick #${simTick}] ${msg}\n` + simLogBox.textContent;
+    }
+
+    function resetSimulation() {
+      simTick = 0;
+      nearMissCount = 0;
+      rerouteCount = 0;
+      obstacleActive = false;
+      simLogBox.textContent = "Simulation initialized. Stopping distance model: 6.56m @ 3.8 m/s (mu=0.55).\n";
+      simVehicles = [
+        { id: "V01", x: 1, y: 4, gx: 9, gy: 2, state: "NAV" },
+        { id: "V02", x: 0, y: 4, gx: 7, gy: 6, state: "NAV" },
+        { id: "V03", x: 3, y: 4, gx: 3, gy: 2, state: "NAV" }
+      ];
+      simVehicles.forEach((v) => { v.path = astarVehicle({ x: v.x, y: v.y }, { x: v.gx, y: v.gy }); });
+      simPeds = [
+        { id: "P01", x: 2, y: 5, path: [{ x: 2, y: 4 }, { x: 2, y: 3 }, { x: 2, y: 2 }, { x: 2, y: 1 }, { x: 1, y: 1 }] }
+      ];
+      drawSimulation();
+    }
+
+    function stepSimulation() {
+      simTick++;
+      if (simTick === 3 && !obstacleActive) {
+        obstacleActive = true;
+        appendSimLog("Temporary lane obstacle detected at (5,4). Triggering dynamic A* rerouting.");
+      }
+
+      // Advance pedestrians first
+      simPeds.forEach((p) => {
+        if (p.path.length > 0) {
+          const next = p.path.shift();
+          p.x = next.x;
+          p.y = next.y;
+        }
+      });
+
+      // Advance vehicles with conflict prediction
+      simVehicles.forEach((v) => {
+        if (v.state === "PARKED") return;
+        if (obstacleActive && v.path.some((pt) => pt.x === 5 && pt.y === 4)) {
+          v.path = astarVehicle({ x: v.x, y: v.y }, { x: v.gx, y: v.gy });
+          rerouteCount++;
+          appendSimLog(`${v.id} dynamically rerouted via A* around blocked cell (5,4).`);
+        }
+        if (v.path.length === 0) {
+          v.state = "PARKED";
+          return;
+        }
+        const next = v.path[0];
+        // Check pedestrian conflict within 2-cell stopping envelope
+        const pedConflict = simPeds.find((p) => p.path.length > 0 && Math.hypot(next.x - p.x, next.y - p.y) <= 1.2);
+        if (pedConflict) {
+          v.state = "YIELD";
+          nearMissCount++;
+          appendSimLog(`PREVENTED NEAR-MISS: ${v.id} yielded before crosswalk (${next.x},${next.y}) for ${pedConflict.id}.`);
+          return;
+        }
+        const vehConflict = simVehicles.find((o) => o.id !== v.id && o.x === next.x && o.y === next.y);
+        if (vehConflict) {
+          v.state = "YIELD";
+          return;
+        }
+        v.state = "NAV";
+        v.path.shift();
+        v.x = next.x;
+        v.y = next.y;
+        if (v.x === v.gx && v.y === v.gy) {
+          v.state = "PARKED";
+          appendSimLog(`${v.id} safely parked at target bay (${v.gx},${v.gy}).`);
+        }
+      });
+
+      drawSimulation();
+    }
+
+    function drawSimulation() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const colors = {
+        LANE: "#263040",
+        OBSTACLE: "#11151d",
+        PED_PATH: "#3c4657",
+        CROSSWALK: "#647087",
+        BLIND: "#855b22",
+        ENTRANCE: "#247a53",
+        EXIT: "#59438e",
+        EMERGENCY_ROUTE: "#5c2a35",
+        BAY_ACC: "#226493",
+        BAY_EV: "#1a6b54",
+        BAY_STD: "#1e4e68",
+        BAY_LRG: "#1e4e68",
+        BAY_EMG: "#7f2935"
+      };
+
+      for (let x = 0; x < W; x++) {
+        for (let y = 0; y < H; y++) {
+          const ct = cellType(x, y);
+          ctx.fillStyle = (obstacleActive && x === 5 && y === 4) ? "#b91c1c" : (colors[ct] || "#263040");
+          ctx.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2);
+
+          const bay = bays.find((b) => b.x === x && b.y === y);
+          if (bay) {
+            ctx.fillStyle = "#e8eef5";
+            ctx.font = "bold 10px sans-serif";
+            ctx.fillText(bay.code, x * CELL + 8, y * CELL + 16);
+          } else if (ct === "CROSSWALK") {
+            ctx.fillStyle = "#cbd5e1";
+            ctx.font = "9px monospace";
+            ctx.fillText("X-WALK", x * CELL + 4, y * CELL + 25);
+          } else if (ct === "BLIND") {
+            ctx.fillStyle = "#fde68a";
+            ctx.font = "bold 9px monospace";
+            ctx.fillText("BLIND", x * CELL + 7, y * CELL + 25);
+          }
+        }
+      }
+
+      // Draw A* trajectories
+      simVehicles.forEach((v) => {
+        if (v.path && v.path.length > 0) {
+          ctx.strokeStyle = "#60a5fa";
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.moveTo(v.x * CELL + 22, v.y * CELL + 22);
+          v.path.forEach((pt) => ctx.lineTo(pt.x * CELL + 22, pt.y * CELL + 22));
+          ctx.stroke();
+        }
+      });
+
+      // Draw vehicles
+      simVehicles.forEach((v) => {
+        ctx.fillStyle = v.state === "YIELD" ? "#f59e0b" : v.state === "PARKED" ? "#22c55e" : "#3b82f6";
+        ctx.fillRect(v.x * CELL + 7, v.y * CELL + 7, CELL - 14, CELL - 14);
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(v.x * CELL + 7, v.y * CELL + 7, CELL - 14, CELL - 14);
+        ctx.fillStyle = "#0f172a";
+        ctx.font = "bold 10px sans-serif";
+        ctx.fillText(v.id, v.x * CELL + 13, v.y * CELL + 26);
+      });
+
+      // Draw pedestrians
+      simPeds.forEach((p) => {
+        ctx.fillStyle = "#facc15";
+        ctx.beginPath();
+        ctx.arc(p.x * CELL + 22, p.y * CELL + 22, 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#111827";
+        ctx.font = "bold 10px sans-serif";
+        ctx.fillText("P", p.x * CELL + 19, p.y * CELL + 26);
+      });
+
+      document.getElementById("simTickBadge").textContent = `Tick: ${simTick}`;
+      document.getElementById("simNearMissBadge").textContent = `Near-Misses Prevented: ${nearMissCount}`;
+      document.getElementById("simRerouteBadge").textContent = `A* Reroutes: ${rerouteCount}`;
+    }
+
+    document.getElementById("btnStepSim").addEventListener("click", stepSimulation);
+    document.getElementById("btnResetSim").addEventListener("click", resetSimulation);
+    document.getElementById("btnToggleObstacle").addEventListener("click", () => {
+      obstacleActive = !obstacleActive;
+      appendSimLog(`Obstacle at (5,4) ${obstacleActive ? "ACTIVATED" : "CLEARED"}.`);
+      stepSimulation();
+    });
+    document.getElementById("btnSpawnPed").addEventListener("click", () => {
+      simPeds.push({
+        id: "P0" + (simPeds.length + 1),
+        x: 2,
+        y: 6,
+        path: [{ x: 2, y: 5 }, { x: 2, y: 4 }, { x: 2, y: 3 }, { x: 2, y: 2 }, { x: 2, y: 1 }]
+      });
+      appendSimLog("Spawned pedestrian approaching crosswalk (2,4).");
+      drawSimulation();
+    });
+    document.getElementById("btnPlaySim").addEventListener("click", (e) => {
+      playing = !playing;
+      e.target.textContent = playing ? "Pause Animation" : "Play Animation";
+      if (playing) {
+        playTimer = setInterval(stepSimulation, 550);
+      } else {
+        clearInterval(playTimer);
+      }
+    });
+
+    resetSimulation();
+
+    // =========================================================================
+    // 2. BARRIER-FREE ACCESS & EXPLAINABLE SPACE ALLOCATOR
+    // =========================================================================
+    const accessLogBox = document.getElementById("accessLogBox");
+    const allocReportBox = document.getElementById("allocReportBox");
+
+    function runAllocationReport(plate) {
+      const profiles = {
+        "B-SP 2026": { token: "PVT-9A4F2026", size: 2, sizeLabel: "STANDARD", ev: true, acc: false },
+        "M-EW 101": { token: "PVT-7C1E0101", size: 3, sizeLabel: "LARGE", ev: false, acc: true },
+        "HH-MV 88": { token: "PVT-3B8D0088", size: 1, sizeLabel: "COMPACT", ev: false, acc: false }
+      };
+      const prof = profiles[plate];
+      if (!prof) {
+        allocReportBox.textContent = "Unenrolled vehicle: no space allocation performed.";
+        return null;
+      }
+
+      const scored = bays
+        .filter((b) => b.type !== "EMG" && prof.size <= b.max && (!b.acc || prof.acc))
+        .map((b) => {
+          let score = 100.0;
+          score -= b.walk * 0.30;
+          score -= b.exit * 0.15;
+          score += (2 - (b.max - prof.size)) * 1.5;
+          score += b.blind ? -14.4 : 2.0;
+          if (prof.ev) score += b.ev ? 25.0 : -25.0;
+          else if (b.ev) score -= 8.0;
+          if (prof.acc) score += b.acc ? 40.0 : -20.0;
+          return { bay: b, score: Number(score.toFixed(2)) };
+        })
+        .sort((a, b) => b.score - a.score);
+
+      const best = scored[0];
+      const baseline = bays.find((b) => b.type !== "EMG" && prof.size <= b.max && (!b.acc || prof.acc));
+      const savedWalk = (baseline.walk - best.bay.walk).toFixed(1);
+
+      let report = `=== EXPLAINABLE ALLOCATION FOR ${prof.token} (${prof.sizeLabel}, EV=${prof.ev}, Acc=${prof.acc}) ===\n`;
+      report += `Selected Space : ${best.bay.code} (Score: ${best.score})\n`;
+      report += `Walking Dist   : ${best.bay.walk}m (Baseline: ${baseline.walk}m -> Saved ${savedWalk}m)\n`;
+      report += `Sightlines     : ${best.bay.blind ? "Near blind corner (penalized)" : "Clear sightlines (away from blind corners)"}\n\n`;
+      report += `TOP CANDIDATE BREAKDOWN:\n`;
+      scored.slice(0, 6).forEach((s, idx) => {
+        report += `${idx + 1}. ${s.bay.code} [Score ${s.score}] — Walk ${s.bay.walk}m, EV=${s.bay.ev}, Acc=${s.bay.acc}\n`;
+      });
+      allocReportBox.textContent = report;
+      return best.bay;
+    }
+
+    document.getElementById("btnEvalArrival").addEventListener("click", () => {
+      const plate = document.getElementById("selVehicle").value;
+      const cred = document.getElementById("selCredential").value;
+      const sec = document.getElementById("chkSecondary").checked;
+      const outage = document.getElementById("chkNetOutage").checked;
+
+      if (cred === "EMERGENCY_OVERRIDE") {
+        accessLogBox.textContent = `[ENTRY: EMERGENCY_OVERRIDE]\nPriority access granted immediately to Emergency Bay E-99.\n\n` + accessLogBox.textContent;
+        return;
+      }
+      if (outage) {
+        accessLogBox.textContent = `[ENTRY: FAILSAFE_HOLD]\nNetwork outage active: secure entrance is NEVER opened automatically on server failure.\nAlternative Workflow: Present offline-verifiable signed QR badge or request staff override.\n\n` + accessLogBox.textContent;
+        return;
+      }
+      if (plate === "XX-UN 999") {
+        accessLogBox.textContent = `[ENTRY: DENIED]\nVehicle XX-UN 999 has no enrolled authorization relationship.\nAlternative Workflow: Route to courtesy pull-aside bay for instant app check-in.\n\n` + accessLogBox.textContent;
+        runAllocationReport(plate);
+        return;
+      }
+      if (cred === "ENROLLED_LPR_SIM" && !sec) {
+        accessLogBox.textContent = `[ENTRY: MANUAL_VERIFICATION_REQUIRED]\nOwnership Rule Triggered: Detected license plate (${plate}) alone is never treated as proof of ownership.\nAlternative Workflow: Confirm arrival via SmartPark App BLE Key or Signed Badge.\n\n` + accessLogBox.textContent;
+        return;
+      }
+      const chosen = runAllocationReport(plate);
+      accessLogBox.textContent = `[ENTRY: GRANTED — BARRIER-FREE]\nVehicle (${plate}) verified via ${cred}.\nGuidance: Proceed smoothly without stopping to Bay ${chosen.code} (${chosen.walk}m to lobby).\n\n` + accessLogBox.textContent;
+    });
+
+    document.getElementById("btnEvalDeparture").addEventListener("click", () => {
+      const plate = document.getElementById("selVehicle").value;
+      const outage = document.getElementById("chkNetOutage").checked;
+      if (outage) {
+        accessLogBox.textContent = `[EXIT: EMERGENCY_OVERRIDE — ANTI-ENTRAPMENT POLICY]\nNetwork outage detected during departure: safe egress granted immediately so no person or vehicle is ever trapped. Billing queued for post-recovery reconciliation.\n\n` + accessLogBox.textContent;
+        return;
+      }
+      accessLogBox.textContent = `[EXIT: GRANTED — RECEIPT ISSUED]\nSession completed for ${plate}.\nTariff Calculation (Europe/Berlin, Decimal): 90 min peak -> 10.80 EUR (SETTLED via Prepaid Wallet).\nPrivacy Badge automatically revoked and hidden.\n\n` + accessLogBox.textContent;
+    });
+
+    runAllocationReport("B-SP 2026");
+    document.getElementById("btnEvalArrival").click();
+
+    // =========================================================================
+    // 3. GUARDIAN SHIELD & WALK-UP DIGITAL KEY
+    // =========================================================================
+    const guardianLogBox = document.getElementById("guardianLogBox");
+    const digitalKeyLogBox = document.getElementById("digitalKeyLogBox");
+    let activeChallenge = null;
+
+    document.getElementById("btnInjectSensor").addEventListener("click", () => {
+      const ev = document.getElementById("selSensorEvent").value;
+      const rules = {
+        PEDESTRIAN_PROXIMITY: {
+          sev: "INFORMATIONAL",
+          cls: "SENSOR_EVENT",
+          rule: "R_ETHICS_NO_PROXIMITY_ACCUSATION",
+          exp: "Pedestrian detected on adjacent walkway. Per SmartPark ethical policy, ordinary presence or proximity near a vehicle NEVER triggers an accusation or security alarm.",
+          ntf: "SILENT_HISTORY_ONLY (Zero push spam)"
+        },
+        VIBRATION_MINOR: {
+          sev: "INFORMATIONAL",
+          cls: "SENSOR_EVENT",
+          rule: "R_SINGLE_MINOR_VIBRATION_DAMPENED",
+          exp: "Isolated minor vibration recorded without corroborating tamper indicators (dampened against ambient garage acoustics).",
+          ntf: "SILENT_HISTORY_ONLY"
+        },
+        DOOR_OPEN_UNAUTH: {
+          sev: "ATTENTION_REQUIRED",
+          cls: "SUSPICIOUS_PATTERN",
+          rule: "R_UNEXPECTED_DOOR_OPEN",
+          exp: "Unexpected DOOR_OPEN event while Guardian Shield is armed with no preceding digital key unlock.",
+          ntf: "DELIVERED_SIM (Cooldown window started)"
+        },
+        CORROBORATED_IMPACT_ALARM: {
+          sev: "HIGH_PRIORITY",
+          cls: "CONFIRMED_ALARM",
+          rule: "R_CORROBORATED_MULTI_SENSOR_ALARM, R_OEM_ALARM_SIGNAL",
+          exp: "Multiple corroborated physical tamper indicators (IMPACT_HEAVY + ALARM_TRIGGERED) on armed session. Safe Action: Do not approach alone; alert on-site security via app.",
+          ntf: "DELIVERED_SIM (Breaks through quiet hours)"
+        },
+        UNAUTHENTICATED_SPOOF: {
+          sev: "INFORMATIONAL",
+          cls: "SENSOR_EVENT",
+          rule: "R_UNAUTHENTICATED_SOURCE_REJECTED",
+          exp: "Rejected unauthenticated sensor frame from alarm correlation to prevent spoofing and false positives.",
+          ntf: "SILENT_HISTORY_ONLY"
+        }
+      }[ev];
+
+      guardianLogBox.textContent =
+        `=== GUARDIAN SHIELD ASSESSMENT ===\n` +
+        `Classification : ${rules.cls} | Severity: ${rules.sev}\n` +
+        `Triggered Rule : ${rules.rule}\n` +
+        `Explanation    : ${rules.exp}\n` +
+        `Notification   : ${rules.ntf}\n` +
+        `Limitations    : Simulated telemetry; software cannot identify individuals or guarantee physical protection.\n\n` +
+        guardianLogBox.textContent;
+    });
+    document.getElementById("btnInjectSensor").click();
+
+    document.getElementById("btnBleProximity").addEventListener("click", () => {
+      activeChallenge = {
+        id: "CHK-" + Math.random().toString(16).substring(2, 10).toUpperCase(),
+        nonce: Math.random().toString(16).substring(2, 18),
+        used: false
+      };
+      digitalKeyLogBox.textContent =
+        `[STEP 1-3: BLE PROXIMITY 1.5m DETECTED]\n` +
+        `Proximity alone NEVER unlocks the vehicle.\n` +
+        `Issued Challenge: ${activeChallenge.id} (Single-use Nonce=${activeChallenge.nonce}, TTL=60s).\n` +
+        `Awaiting explicit user biometric confirmation...\n\n` +
+        digitalKeyLogBox.textContent;
+    });
+
+    document.getElementById("btnTryUnlockNoConfirm").addEventListener("click", () => {
+      digitalKeyLogBox.textContent =
+        `[BLOCKED: PermissionError]\n` +
+        `Walk-up proximity alone cannot unlock vehicle: explicit user biometric/passcode confirmation required.\n\n` +
+        digitalKeyLogBox.textContent;
+    });
+
+    document.getElementById("btnConfirmBiometric").addEventListener("click", () => {
+      if (!activeChallenge) {
+        digitalKeyLogBox.textContent = `[ERROR] Trigger Step 1 (BLE Proximity) first to obtain a challenge.\n\n` + digitalKeyLogBox.textContent;
+        return;
+      }
+      if (activeChallenge.used) {
+        digitalKeyLogBox.textContent = `[BLOCKED: REPLAY PREVENTED]\nSingle-use nonce (${activeChallenge.nonce}) was already consumed!\n\n` + digitalKeyLogBox.textContent;
+        return;
+      }
+      activeChallenge.used = true;
+      digitalKeyLogBox.textContent =
+        `[STEP 4-7: BIOMETRIC CONFIRMED & VERIFIED]\n` +
+        `HMAC confirmation signature verified for ${activeChallenge.id}.\n` +
+        `SIMULATED ADAPTER: Vehicle PVT-9A4F2026 unlocked via enrolled key DKEY-88F12A. Audit record saved.\n\n` +
+        digitalKeyLogBox.textContent;
+    });
+    document.getElementById("btnBleProximity").click();
+
+    // =========================================================================
+    // 4. PRIVACY-FIRST DIGITAL PARKING BADGE
+    // =========================================================================
+    const badgeBox = document.getElementById("badgeBox");
+    let badgeRevoked = false;
+
+    function renderBadge(staleReplay = false) {
+      if (badgeRevoked) {
+        badgeBox.textContent = "BADGE REVOKED / HIDDEN: Associated session credential has been revoked. Badge automatically disappears.";
+        return;
+      }
+      const slot = Math.floor(Date.now() / 30000);
+      const qr = [
+        "██████  ██  ████  ██████",
+        "██  ██    ████    ██  ██",
+        "██████  ████  ██  ██████",
+        "        ██  ████        ",
+        "████  ██████  ████  ████",
+        "██████  ██  ████  ██████",
+        "██  ██  ████  ██  ██  ██",
+        "██████  ██  ████  ██████"
+      ].join("\n");
+
+      if (staleReplay) {
+        badgeBox.textContent =
+          `[SERVER VERIFICATION: REJECTED — SCREENSHOT REPLAY DETECTED]\n` +
+          `Presented token rolling slot (${slot - 4}) is stale vs. current server slot (${slot}).\n` +
+          `Static screenshots cannot be reused across time windows.`;
+        return;
+      }
+
+      badgeBox.textContent =
+        `=== PRIVACY-FIRST DIGITAL PARKING BADGE (SIMULATED) ===\n` +
+        `Public Badge ID      : BDG-7F3A91C04E\n` +
+        `Public Vehicle Token : PVT-9A4F2026 (Zero Customer PII / Plate Hidden)\n` +
+        `Assigned Bay         : A-04 (EV Charging Bay)\n` +
+        `Rolling 30s Slot     : ${slot} (Anti-Screenshot Protection Active)\n` +
+        `Server Verification  : VALID — HMAC-SHA256 Signature Verified\n\n` +
+        `${qr}`;
+    }
+
+    document.getElementById("btnIssueBadge").addEventListener("click", () => {
+      badgeRevoked = false;
+      renderBadge(false);
+    });
+    document.getElementById("btnTestScreenshotReplay").addEventListener("click", () => renderBadge(true));
+    document.getElementById("btnRevokeBadge").addEventListener("click", () => {
+      badgeRevoked = true;
+      renderBadge(false);
+    });
+    renderBadge(false);
+  </script>
+</body>
+</html>

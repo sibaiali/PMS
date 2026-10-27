@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "name": "smartpark-guardian-ai",
+  "cleanUrls": true,
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}

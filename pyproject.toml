@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "smartpark-guardian-ai"
+version = "2.0.0"
+description = "Barrier-Free, Intelligent, Secure and Accident-Aware Parking Ecosystem"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+  {name = "Ali Sibai"}
+]
+dependencies = [
+  "tzdata>=2024.1",
+  "pillow>=10.0.0",
+]
+
+[project.scripts]
+smartpark = "smartpark.__main__:main"
