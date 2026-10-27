@@ -2,7 +2,7 @@
 # All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG) & International Copyright Treaties.
 # Unauthorized copying, redistribution, plagiarism, or commercial use is strictly prohibited.
 
-"""CLI and GUI Entrypoint for SmartPark Guardian AI (`python -m smartpark`)."""
+"""CLI, Web Command Center, and GUI Entrypoint for SmartPark Guardian AI (`python -m smartpark`)."""
 
 from __future__ import annotations
 
@@ -56,6 +56,17 @@ def main() -> None:
         help="Run headless deterministic demonstration and print full telemetry summary.",
     )
     parser.add_argument(
+        "--web",
+        action="store_true",
+        help="Start the live Python 3.12 Web Command Center & REST API server on http://localhost:8080/.",
+    )
+    parser.add_argument(
+        "--port",
+        type=int,
+        default=8080,
+        help="Port for the Python web server (default: 8080).",
+    )
+    parser.add_argument(
         "--db",
         default=":memory:",
         help="SQLite database path (default: ':memory:' or e.g. 'smartpark.db').",
@@ -67,7 +78,11 @@ def main() -> None:
     )
     args = parser.parse_args()
 
-    if args.demo or args.export_png:
+    if args.web:
+        from smartpark.web_server import run_web_server
+
+        run_web_server(port=args.port)
+    elif args.demo or args.export_png:
         run_cli_demo(db_path=args.db, export_png=args.export_png)
     else:
         from smartpark.gui.app import launch_app

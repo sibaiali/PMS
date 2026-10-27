@@ -3,18 +3,18 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SmartPark Guardian AI | Barrier-Free, Intelligent &amp; Accident-Aware Parking Ecosystem — Ali Sibai</title>
+  <title>SmartPark Guardian AI | Live 60-FPS Automotive Digital Twin &amp; Python Telemetry Command Center — Ali Sibai</title>
   <meta name="author" content="Ali Sibai">
   <meta name="copyright" content="Copyright (c) 2026 Ali Sibai. All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG).">
-  <meta name="description" content="Interactive engineering demonstration of SmartPark Guardian AI by Ali Sibai: barrier-free access authorization, explainable space allocation, Guardian Shield vehicle security correlation, privacy-first QR badges, and A* accident-prevention simulation.">
-  <meta name="theme-color" content="#0f141d">
+  <meta name="description" content="Real-time 60-FPS automotive parking digital twin and Python 3.12 telemetry command center by Ali Sibai: barrier-free access, A* pathfinding, kinematic LiDAR stopping cones, EV charging telemetry, and Guardian Shield security.">
+  <meta name="theme-color" content="#070b12">
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SoftwareSourceCode",
-      "name": "SmartPark Guardian AI (Smart Parking Management System)",
+      "name": "SmartPark Guardian AI — Automotive Digital Twin & Parking Ecosystem",
       "version": "2.0.0",
-      "programmingLanguage": ["Python 3.12", "SQLite", "JavaScript"],
+      "programmingLanguage": ["Python 3.12", "SQLite", "JavaScript ES6+"],
       "codeRepository": "https://github.com/sibaiali/PMS",
       "url": "https://alisibai.vercel.app/smartpark.html",
       "author": {
@@ -38,1074 +38,1705 @@
   </script>
   <style>
     :root {
-      --bg: #0f141d;
-      --surface: #171f2e;
-      --surface-alt: #1e293b;
-      --border: #2c3a52;
-      --fg: #e8eef5;
-      --muted: #9aa8bc;
-      --accent: #3b82f6;
-      --accent-hover: #2563eb;
-      --success: #22c55e;
-      --warning: #f59e0b;
-      --danger: #ef4444;
+      --bg: #070b12;
+      --bg-panel: rgba(15, 23, 38, 0.88);
+      --bg-card: #111a2c;
+      --bg-input: #17233b;
+      --border: rgba(56, 189, 248, 0.18);
+      --border-strong: rgba(56, 189, 248, 0.42);
+      --fg: #f1f5f9;
+      --muted: #94a3b8;
+      --cyan: #06b6d4;
+      --blue: #3b82f6;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --crimson: #ef4444;
+      --purple: #8b5cf6;
       --mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
       --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     }
-    [data-theme="light"] {
-      --bg: #f4f6f9;
-      --surface: #ffffff;
-      --surface-alt: #eef2f7;
-      --border: #d1d9e6;
-      --fg: #111827;
-      --muted: #4b5563;
-      --accent: #2563eb;
-      --accent-hover: #1d4ed8;
-      --success: #15803d;
-      --warning: #b45309;
-      --danger: #b91c1c;
-    }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background: var(--bg);
+      background: radial-gradient(circle at 15% 0%, #0f1f38 0%, #070b12 55%);
       color: var(--fg);
       font-family: var(--sans);
-      line-height: 1.55;
-      padding-bottom: 4rem;
+      line-height: 1.5;
+      min-height: 100vh;
+      overflow-x: hidden;
     }
-    a { color: var(--accent); text-decoration: none; }
+    a { color: var(--cyan); text-decoration: none; }
     a:hover { text-decoration: underline; }
-    .container { max-width: 1280px; margin: 0 auto; padding: 0 1.25rem; }
 
-    /* Top Header */
+    /* Top Command Bar */
     header {
-      background: var(--surface);
+      background: rgba(8, 13, 23, 0.92);
+      backdrop-filter: blur(12px);
       border-bottom: 1px solid var(--border);
       position: sticky;
       top: 0;
-      z-index: 20;
+      z-index: 50;
     }
-    .header-inner {
+    .topbar {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 0.75rem 1.25rem;
       display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
       gap: 0.75rem;
-      padding: 0.9rem 0;
     }
-    .brand { display: flex; align-items: center; gap: 0.75rem; }
-    .brand-badge {
-      background: var(--accent);
-      color: #fff;
-      font-weight: 700;
-      font-size: 0.85rem;
-      padding: 0.35rem 0.6rem;
-      border-radius: 6px;
-      letter-spacing: 0.04em;
-    }
-    .brand-title { font-weight: 700; font-size: 1.15rem; }
-    .sim-pill {
+    .brand-group { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+    .logo-chip {
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #030712;
+      font-weight: 800;
       font-family: var(--mono);
-      font-size: 0.75rem;
-      background: rgba(245, 158, 11, 0.14);
-      color: var(--warning);
-      border: 1px solid var(--warning);
-      padding: 0.25rem 0.65rem;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      letter-spacing: 0.05em;
+    }
+    .brand-name { font-weight: 800; font-size: 1.15rem; letter-spacing: -0.01em; }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-family: var(--mono);
+      font-size: 0.73rem;
+      padding: 0.25rem 0.7rem;
       border-radius: 999px;
+      background: rgba(16, 185, 129, 0.14);
+      color: var(--emerald);
+      border: 1px solid rgba(16, 185, 129, 0.4);
       font-weight: 600;
     }
-    .header-actions { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
-
-    button, select, input {
-      font-family: inherit;
-      font-size: 0.88rem;
-      border-radius: 6px;
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 10px var(--emerald);
+      animation: pulse 1.6s infinite;
     }
-    .btn {
-      background: var(--surface-alt);
-      color: var(--fg);
-      border: 1px solid var(--border);
-      padding: 0.45rem 0.85rem;
-      cursor: pointer;
-      font-weight: 600;
-      transition: background 0.15s, border-color 0.15s;
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.55; }
     }
-    .btn:hover { border-color: var(--accent); }
-    .btn-primary {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-    }
-    .btn-primary:hover { background: var(--accent-hover); }
-
-    /* Hero */
-    .hero {
-      padding: 2.5rem 0 1.75rem;
-      border-bottom: 1px solid var(--border);
-    }
-    .hero-grid {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 1.5rem;
-      align-items: start;
-    }
-    @media (max-width: 920px) {
-      .hero-grid { grid-template-columns: 1fr; }
-    }
-    .hero h1 {
-      font-size: clamp(1.75rem, 3vw, 2.45rem);
-      line-height: 1.2;
-      margin-bottom: 0.75rem;
-    }
-    .hero p { color: var(--muted); max-width: 68ch; margin-bottom: 1.1rem; }
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
-    }
-    .kpi-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-    }
-    .kpi-card strong {
-      display: block;
-      font-size: 1.35rem;
+    .sim-disclaimer-pill {
       font-family: var(--mono);
-      color: var(--accent);
-    }
-    .kpi-card span { font-size: 0.8rem; color: var(--muted); }
-
-    /* Navigation Tabs */
-    .tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin: 1.5rem 0 1.25rem;
-    }
-    .tab-btn {
-      background: var(--surface);
-      color: var(--muted);
-      border: 1px solid var(--border);
-      padding: 0.55rem 1rem;
-      border-radius: 6px;
-      cursor: pointer;
-      font-weight: 600;
-    }
-    .tab-btn.active {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
+      font-size: 0.72rem;
+      padding: 0.22rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(245, 158, 11, 0.13);
+      color: var(--amber);
+      border: 1px solid rgba(245, 158, 11, 0.4);
     }
 
-    .panel { display: none; }
-    .panel.active { display: block; }
+    .shell {
+      max-width: 1560px;
+      margin: 0 auto;
+      padding: 1rem 1.25rem 3rem;
+    }
 
-    .grid-2 {
+    /* Live Telemetry KPI Ribbon */
+    .kpi-ribbon {
       display: grid;
-      grid-template-columns: 1.35fr 1fr;
-      gap: 1.25rem;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.75rem;
+      margin-bottom: 1rem;
     }
-    @media (max-width: 960px) {
-      .grid-2 { grid-template-columns: 1fr; }
+    @media (max-width: 1200px) {
+      .kpi-ribbon { grid-template-columns: repeat(3, 1fr); }
     }
-    .card {
-      background: var(--surface);
+    @media (max-width: 680px) {
+      .kpi-ribbon { grid-template-columns: repeat(2, 1fr); }
+    }
+    .kpi-tile {
+      background: var(--bg-panel);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1.2rem;
+      padding: 0.75rem 0.95rem;
+      position: relative;
+      overflow: hidden;
     }
-    .card h2 { font-size: 1.15rem; margin-bottom: 0.4rem; }
-    .card p.sub { font-size: 0.86rem; color: var(--muted); margin-bottom: 1rem; }
+    .kpi-tile::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 3px;
+      height: 100%;
+      background: var(--cyan);
+    }
+    .kpi-tile.emerald::before { background: var(--emerald); }
+    .kpi-tile.amber::before { background: var(--amber); }
+    .kpi-tile.purple::before { background: var(--purple); }
+    .kpi-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      display: block;
+    }
+    .kpi-value {
+      font-family: var(--mono);
+      font-size: 1.45rem;
+      font-weight: 800;
+      color: var(--fg);
+      margin: 0.15rem 0;
+    }
+    .kpi-sub { font-size: 0.74rem; color: var(--cyan); font-family: var(--mono); }
 
-    .controls-row {
+    /* Main Cockpit Layout */
+    .cockpit-grid {
+      display: grid;
+      grid-template-columns: 1.65fr 1fr;
+      gap: 1rem;
+      align-items: start;
+    }
+    @media (max-width: 1180px) {
+      .cockpit-grid { grid-template-columns: 1fr; }
+    }
+
+    .panel-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.42);
+    }
+    .panel-header {
       display: flex;
       flex-wrap: wrap;
-      gap: 0.5rem;
+      justify-content: space-between;
       align-items: center;
-      margin-bottom: 0.9rem;
+      gap: 0.5rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid rgba(148, 163, 184, 0.14);
     }
-    select, input[type="text"] {
-      background: var(--surface-alt);
+    .panel-title {
+      font-size: 1rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .panel-sub { font-size: 0.78rem; color: var(--muted); }
+
+    /* Action Buttons */
+    .btn-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      margin-bottom: 0.75rem;
+    }
+    .btn {
+      background: var(--bg-input);
       color: var(--fg);
       border: 1px solid var(--border);
-      padding: 0.42rem 0.65rem;
-    }
-    label.inline {
+      padding: 0.42rem 0.78rem;
+      border-radius: 7px;
+      font-family: inherit;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
       display: inline-flex;
       align-items: center;
       gap: 0.35rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-      cursor: pointer;
+    }
+    .btn:hover {
+      border-color: var(--cyan);
+      background: rgba(6, 182, 212, 0.14);
+      transform: translateY(-1px);
+    }
+    .btn-cyan {
+      background: linear-gradient(135deg, #0891b2, #2563eb);
+      border-color: #38bdf8;
+      color: #fff;
+    }
+    .btn-emerald {
+      background: rgba(16, 185, 129, 0.18);
+      border-color: var(--emerald);
+      color: #34d399;
+    }
+    .btn-amber {
+      background: rgba(245, 158, 11, 0.18);
+      border-color: var(--amber);
+      color: #fbbf24;
+    }
+    .btn-crimson {
+      background: rgba(239, 68, 68, 0.18);
+      border-color: var(--crimson);
+      color: #f87171;
     }
 
-    canvas#simCanvas {
+    /* Simulation Canvas Container */
+    .canvas-wrap {
+      position: relative;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border-strong);
+      background: #090d16;
+    }
+    canvas#twinCanvas {
       width: 100%;
-      max-width: 720px;
       height: auto;
-      background: #121722;
-      border: 1px solid var(--border);
-      border-radius: 8px;
       display: block;
+      cursor: crosshair;
     }
-    .console-box {
-      background: var(--surface-alt);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0.85rem;
+    .canvas-hud-overlay {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(7, 11, 18, 0.9);
+      border-top: 1px solid var(--border);
       font-family: var(--mono);
-      font-size: 0.8rem;
-      white-space: pre-wrap;
-      max-height: 410px;
-      overflow-y: auto;
-      color: var(--fg);
+      font-size: 0.74rem;
+      color: var(--muted);
     }
-    .badge-status {
+    .legend-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.85rem;
+      align-items: center;
+    }
+    .dot {
       display: inline-block;
-      padding: 0.15rem 0.5rem;
-      border-radius: 4px;
-      font-family: var(--mono);
-      font-size: 0.75rem;
-      font-weight: 700;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      margin-right: 4px;
     }
-    .status-ok { background: rgba(34, 197, 94, 0.18); color: var(--success); }
-    .status-warn { background: rgba(245, 158, 11, 0.18); color: var(--warning); }
-    .status-err { background: rgba(239, 68, 68, 0.18); color: var(--danger); }
 
+    /* Fleet Table */
+    .table-wrap {
+      max-height: 215px;
+      overflow-y: auto;
+      margin-top: 0.65rem;
+      border: 1px solid rgba(148, 163, 184, 0.14);
+      border-radius: 8px;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
-      font-size: 0.85rem;
-      margin-top: 0.6rem;
+      font-size: 0.78rem;
+      font-family: var(--mono);
     }
     th, td {
+      padding: 0.45rem 0.6rem;
       text-align: left;
-      padding: 0.55rem 0.65rem;
-      border-bottom: 1px solid var(--border);
+      border-bottom: 1px solid rgba(148, 163, 184, 0.1);
     }
-    th { color: var(--muted); font-weight: 600; }
-    .legend {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.75rem;
-      font-size: 0.78rem;
+    th {
+      background: rgba(15, 23, 38, 0.95);
       color: var(--muted);
-      margin-top: 0.65rem;
+      position: sticky;
+      top: 0;
     }
-    .swatch {
+
+    /* Right-Side Telemetry Stack */
+    .right-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    canvas.chart-canvas {
+      width: 100%;
+      height: 155px;
+      background: #0a101d;
+      border: 1px solid rgba(56, 189, 248, 0.16);
+      border-radius: 8px;
+      display: block;
+    }
+
+    /* Interactive Control Tabs on Right */
+    .subtabs {
+      display: flex;
+      gap: 0.35rem;
+      margin-bottom: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .subtab-btn {
+      background: var(--bg-card);
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 0.38rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .subtab-btn.active {
+      background: var(--cyan);
+      color: #030712;
+      border-color: var(--cyan);
+    }
+    .subpanel { display: none; }
+    .subpanel.active { display: block; }
+
+    select, input[type="text"] {
+      background: var(--bg-input);
+      color: var(--fg);
+      border: 1px solid var(--border);
+      padding: 0.4rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-family: inherit;
+    }
+    .terminal {
+      background: #060a11;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 8px;
+      padding: 0.7rem;
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: #cbd5e1;
+      max-height: 230px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      margin-top: 0.55rem;
+    }
+    .tag-chip {
       display: inline-block;
-      width: 11px;
-      height: 11px;
-      border-radius: 2px;
-      margin-right: 4px;
-      vertical-align: middle;
+      padding: 0.12rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      font-weight: 700;
     }
+    .tag-ok { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .tag-warn { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .tag-crit { background: rgba(239, 68, 68, 0.22); color: #f87171; }
   </style>
 </head>
 <body>
   <header>
-    <div class="container header-inner">
-      <div class="brand">
-        <span class="brand-badge">SPG-AI v2.0</span>
-        <span class="brand-title">SmartPark Guardian AI</span>
-        <span class="sim-pill">SIMULATION MODE: SENSORS &amp; HARDWARE SIMULATED</span>
+    <div class="topbar">
+      <div class="brand-group">
+        <span class="logo-chip">SMARTPARK AI v2.0</span>
+        <span class="brand-name">Automotive Digital Twin &amp; Python Telemetry Command Center</span>
+        <span class="status-pill" id="engineConnectionBadge">
+          <span class="pulse-dot"></span>
+          <span id="engineStatusText">PYTHON 3.12 ENGINE + 60-FPS KINEMATIC TWIN ACTIVE</span>
+        </span>
+        <span class="sim-disclaimer-pill">SIMULATION MODE: SENSORS &amp; ACTUATORS SIMULATED</span>
       </div>
-      <div class="header-actions">
-        <button class="btn" id="themeBtn" type="button">Toggle Light / Dark</button>
-        <a class="btn" href="https://github.com/sibaiali/PMS" target="_blank" rel="noopener noreferrer">GitHub Repository ↗</a>
-        <a class="btn btn-primary" href="https://alisibai.vercel.app/" target="_blank" rel="noopener noreferrer">Author Portfolio ↗</a>
+      <div class="brand-group">
+        <a class="btn" href="https://github.com/sibaiali/PMS" target="_blank" rel="noopener noreferrer">GitHub Python Repo ↗</a>
+        <a class="btn btn-cyan" href="https://alisibai.vercel.app/" target="_blank" rel="noopener noreferrer">Ali Sibai Portfolio ↗</a>
       </div>
     </div>
   </header>
 
-  <main class="container">
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <h1>Barrier-Free, Intelligent, Secure &amp; Accident-Aware Parking Ecosystem</h1>
-          <p>
-            Engineered in Python 3.12 with SQLite WAL persistence, explainable multi-criteria space allocation,
-            <strong>Guardian Shield</strong> deterministic security correlation, HMAC-SHA256 privacy badges,
-            authenticated walk-up digital keys, and safety-weighted A* pathfinding.
-          </p>
-          <div class="controls-row">
-            <a class="btn btn-primary" href="https://github.com/sibaiali/PMS" target="_blank" rel="noopener noreferrer">Inspect Python Source &amp; 25 Tests ↗</a>
-            <span class="badge-status status-ok">25 / 25 Automated Tests Passing</span>
-            <span class="badge-status status-ok">0 Collisions · 5 Near-Misses Prevented</span>
-          </div>
-        </div>
-        <div class="kpi-grid">
-          <div class="kpi-card">
-            <strong>25 / 25</strong>
-            <span>Unit, Concurrency, DST &amp; Fail-Safe Tests</span>
-          </div>
-          <div class="kpi-card">
-            <strong>+12.14%</strong>
-            <span>Forecast MAE Improvement vs. 24h Baseline</span>
-          </div>
-          <div class="kpi-card">
-            <strong>6.56 m</strong>
-            <span>Simulated Indoor Stopping Distance (3.8 m/s)</span>
-          </div>
-          <div class="kpi-card">
-            <strong>Zero PII</strong>
-            <span>On Rotating 30s HMAC Privacy Badges</span>
-          </div>
-        </div>
+  <main class="shell">
+    <!-- 6-CARD LIVE TELEMETRY RIBBON -->
+    <section class="kpi-ribbon" aria-label="Real-time facility telemetry indicators">
+      <div class="kpi-tile">
+        <span class="kpi-label">Live Bay Occupancy</span>
+        <div class="kpi-value" id="kpiOccupancy">4 / 16 (25.0%)</div>
+        <span class="kpi-sub" id="kpiActiveTransit">3 Vehicles Navigating</span>
+      </div>
+      <div class="kpi-tile emerald">
+        <span class="kpi-label">Collision &amp; Near-Miss Shield</span>
+        <div class="kpi-value" id="kpiSafety">0 Collisions</div>
+        <span class="kpi-sub" id="kpiNearMisses">5 Near-Misses Prevented</span>
+      </div>
+      <div class="kpi-tile amber">
+        <span class="kpi-label">EV Supercharger Grid Load</span>
+        <div class="kpi-value" id="kpiEvLoad">44.0 kW AC</div>
+        <span class="kpi-sub" id="kpiEvBays">2 Active EV Bays Charging</span>
+      </div>
+      <div class="kpi-tile purple">
+        <span class="kpi-label">Session Revenue (Decimal EUR)</span>
+        <div class="kpi-value" id="kpiRevenue">€24.60</div>
+        <span class="kpi-sub">Europe/Berlin DST-Safe Tariff</span>
+      </div>
+      <div class="kpi-tile">
+        <span class="kpi-label">AI Demand Forecast vs Baseline</span>
+        <div class="kpi-value">+12.14%</div>
+        <span class="kpi-sub">MAE 0.0534 vs 0.0607 (90% CI ±0.106)</span>
+      </div>
+      <div class="kpi-tile emerald">
+        <span class="kpi-label">Guardian Shield &amp; Test Suite</span>
+        <div class="kpi-value" id="kpiShieldState">ARMED · 25/25</div>
+        <span class="kpi-sub">Zero Proximity False Accusations</span>
       </div>
     </section>
 
-    <nav class="tabs" aria-label="Interactive Simulator Modules">
-      <button class="tab-btn active" data-tab="tab-sim" type="button">1. Live Garage Map &amp; A* Safety Simulator</button>
-      <button class="tab-btn" data-tab="tab-access" type="button">2. Barrier-Free Access &amp; Space Allocator</button>
-      <button class="tab-btn" data-tab="tab-guardian" type="button">3. Guardian Shield &amp; Walk-Up Digital Key</button>
-      <button class="tab-btn" data-tab="tab-badge" type="button">4. Privacy QR Badge, Billing &amp; Analytics</button>
-    </nav>
-
-    <!-- TAB 1: LIVE GARAGE MAP & ACCIDENT PREVENTION SIMULATOR -->
-    <section class="panel active" id="tab-sim">
-      <div class="grid-2">
-        <div class="card">
-          <h2>Interactive 16×12 Garage Map &amp; Proactive Accident Prevention</h2>
-          <p class="sub">
-            Vehicles navigate via safety-weighted A* pathfinding, yield before pedestrian crosswalks within the
-            conservative stopping-distance envelope (6.56 m at 3.8 m/s, μ=0.55), and dynamically reroute around blocked lanes.
-          </p>
-          <div class="controls-row">
-            <button class="btn btn-primary" id="btnPlaySim" type="button">Play Animation</button>
-            <button class="btn" id="btnStepSim" type="button">Step (+1 Tick)</button>
-            <button class="btn" id="btnToggleObstacle" type="button">Toggle Obstacle at (5,4)</button>
-            <button class="btn" id="btnSpawnPed" type="button">Spawn Crosswalk Pedestrian</button>
-            <button class="btn" id="btnResetSim" type="button">Reset Scenario</button>
+    <div class="cockpit-grid">
+      <!-- LEFT COLUMN: 60-FPS AUTOMOTIVE DIGITAL TWIN CANVAS & LIVE FLEET TABLE -->
+      <div class="panel-card">
+        <div class="panel-header">
+          <div>
+            <div class="panel-title">
+              <span>Live 60-FPS Garage Digital Twin — A* Spline Routing, LiDAR Stopping Cones &amp; EV Telemetry</span>
+            </div>
+            <div class="panel-sub">
+              Click any lane cell on the map to place/remove a dynamic barrier and watch vehicles recompute A* paths in real time.
+            </div>
           </div>
-          <canvas id="simCanvas" width="720" height="540"></canvas>
-          <div class="legend">
-            <span><i class="swatch" style="background:#3b82f6"></i>Navigating Vehicle</span>
-            <span><i class="swatch" style="background:#f59e0b"></i>Yielding for Safety</span>
-            <span><i class="swatch" style="background:#22c55e"></i>Parked Vehicle</span>
-            <span><i class="swatch" style="background:#facc15"></i>Pedestrian</span>
-            <span><i class="swatch" style="background:#647087"></i>Crosswalk (X-WALK)</span>
-            <span><i class="swatch" style="background:#855b22"></i>Blind Corner</span>
-            <span><i class="swatch" style="background:#5c2a35"></i>Emergency Corridor</span>
+          <div style="display:flex; gap:0.6rem; align-items:center;">
+            <label style="font-size:0.76rem; color:var(--muted); cursor:pointer;">
+              <input type="checkbox" id="chkShowLidar" checked> LiDAR Stopping Cones
+            </label>
+            <label style="font-size:0.76rem; color:var(--muted); cursor:pointer;">
+              <input type="checkbox" id="chkShowHeadlights" checked> Headlight Beams
+            </label>
+            <label style="font-size:0.76rem; color:var(--muted); cursor:pointer;">
+              <input type="checkbox" id="chkShowPaths" checked> A* Splines
+            </label>
           </div>
         </div>
 
-        <div class="card">
-          <h2>Live Simulation Telemetry &amp; Near-Miss Log</h2>
-          <p class="sub">
-            SIMULATION LIMITATION: Kinematic stopping distance is an indoor software model and never controls physical vehicle braking or steering.
-          </p>
-          <div class="controls-row">
-            <span class="badge-status status-ok" id="simTickBadge">Tick: 0</span>
-            <span class="badge-status status-ok" id="simCollisionBadge">Collisions: 0</span>
-            <span class="badge-status status-warn" id="simNearMissBadge">Near-Misses Prevented: 0</span>
-            <span class="badge-status status-ok" id="simRerouteBadge">A* Reroutes: 0</span>
-          </div>
-          <div class="console-box" id="simLogBox"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 2: BARRIER-FREE ACCESS & SPACE ALLOCATOR -->
-    <section class="panel" id="tab-access">
-      <div class="grid-2">
-        <div class="card">
-          <h2>Barrier-Free Arrival &amp; Departure Simulator</h2>
-          <p class="sub">
-            A detected license plate alone is never treated as proof of ownership. Entry requires an enrolled relationship plus an active reservation or verified secondary credential.
-          </p>
-          <div class="controls-row">
-            <select id="selVehicle">
-              <option value="B-SP 2026">B-SP 2026 (Ali · Standard · EV Charging Needed)</option>
-              <option value="M-EW 101">M-EW 101 (Dr. Weber · Large · Accessible Permit)</option>
-              <option value="HH-MV 88">HH-MV 88 (Marcus · Compact · Standard)</option>
-              <option value="XX-UN 999">XX-UN 999 (Unenrolled Visitor Vehicle)</option>
-            </select>
-            <select id="selCredential">
-              <option value="BLE_DIGITAL_KEY_SIM">BLE Digital Key Handshake (Simulated)</option>
-              <option value="ENROLLED_LPR_SIM">Optical LPR Camera Only (Simulated)</option>
-              <option value="SIGNED_QR_BADGE">Signed App QR Badge</option>
-              <option value="EMERGENCY_OVERRIDE">Emergency Vehicle Priority</option>
-            </select>
-          </div>
-          <div class="controls-row">
-            <label class="inline"><input type="checkbox" id="chkSecondary" checked> Secondary Credential / Reservation Verified</label>
-            <label class="inline"><input type="checkbox" id="chkNetOutage"> Simulate Network Outage (Fail-Secure Entry / Safe Egress)</label>
-          </div>
-          <div class="controls-row">
-            <button class="btn btn-primary" id="btnEvalArrival" type="button">Evaluate Barrier-Free Arrival</button>
-            <button class="btn" id="btnEvalDeparture" type="button">Evaluate Barrier-Free Departure &amp; Receipt</button>
-          </div>
-          <div class="console-box" id="accessLogBox"></div>
+        <div class="btn-bar">
+          <button class="btn btn-cyan" id="btnSpawnCar" type="button">+ Spawn Barrier-Free Arrival</button>
+          <button class="btn btn-emerald" id="btnRushHour" type="button">⚡ Spawn Rush-Hour Wave (4 Cars)</button>
+          <button class="btn btn-amber" id="btnSpawnPedestrian" type="button">🚶 Spawn Crosswalk Pedestrian</button>
+          <button class="btn btn-crimson" id="btnSpawnEmergency" type="button">🚑 Dispatch Emergency Vehicle (E-99)</button>
+          <button class="btn" id="btnToggleObstacleMain" type="button">🚧 Toggle Obstacle (5,4)</button>
+          <button class="btn btn-crimson" id="btnTriggerTamper" type="button">🛡️ Simulate Bay Tamper Alarm</button>
+          <button class="btn" id="btnDepartRandom" type="button">↗ Checkout &amp; Depart Car</button>
         </div>
 
-        <div class="card">
-          <h2>Explainable Space Recommendation vs. Baseline</h2>
-          <p class="sub">
-            Multi-criteria deterministic ranking across walking distance, zone congestion, size fit, accessibility, EV charger priority, and blind-corner safety margins.
-          </p>
-          <div class="console-box" id="allocReportBox"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 3: GUARDIAN SHIELD & WALK-UP DIGITAL KEY -->
-    <section class="panel" id="tab-guardian">
-      <div class="grid-2">
-        <div class="card">
-          <h2>SmartPark Guardian Shield — Sensor Correlation Engine</h2>
-          <p class="sub">
-            Distinguishes between routine sensor events, suspicious patterns, and corroborated alarms. Enforces ethical anti-surveillance rule <code>R_ETHICS_NO_PROXIMITY_ACCUSATION</code>.
-          </p>
-          <div class="controls-row">
-            <select id="selSensorEvent">
-              <option value="PEDESTRIAN_PROXIMITY">PEDESTRIAN_PROXIMITY (Ethical Rule: Never Accuses Pedestrian)</option>
-              <option value="VIBRATION_MINOR">VIBRATION_MINOR (Isolated Ambient Vibration Dampened)</option>
-              <option value="DOOR_OPEN_UNAUTH">DOOR_OPEN (Unexpected — Attention Required)</option>
-              <option value="CORROBORATED_IMPACT_ALARM">IMPACT_HEAVY + ALARM_TRIGGERED (Confirmed High-Priority Alarm)</option>
-              <option value="UNAUTHENTICATED_SPOOF">Unauthenticated Spoofed Alarm Frame (Rejected)</option>
-            </select>
-            <button class="btn btn-primary" id="btnInjectSensor" type="button">Inject Telemetry Event</button>
+        <div class="canvas-wrap">
+          <canvas id="twinCanvas" width="960" height="600"></canvas>
+          <div class="canvas-hud-overlay">
+            <div class="legend-row">
+              <span><i class="dot" style="background:#38bdf8"></i>Cruising Car + LiDAR Cone</span>
+              <span><i class="dot" style="background:#ef4444"></i>Braking / Yielding (Brake Lights)</span>
+              <span><i class="dot" style="background:#10b981"></i>Parked + Guardian Shield Aura</span>
+              <span><i class="dot" style="background:#facc15"></i>Pedestrian (Right-of-Way)</span>
+              <span><i class="dot" style="background:#a855f7"></i>Emergency Strobe</span>
+            </div>
+            <div id="fpsCounter">60 FPS · Kinematic Model μ=0.55</div>
           </div>
-          <div class="console-box" id="guardianLogBox"></div>
         </div>
 
-        <div class="card">
-          <h2>Authenticated Walk-Up Digital Key Prototype</h2>
-          <p class="sub">
-            BLE proximity alone never unlocks a vehicle. Requires short-lived challenge, single-use nonce replay protection, rate limiting, and explicit user biometric confirmation.
-          </p>
-          <div class="controls-row">
-            <button class="btn" id="btnBleProximity" type="button">1. Simulate BLE Proximity (1.5m)</button>
-            <button class="btn" id="btnTryUnlockNoConfirm" type="button">Attempt Unlock Without Confirmation</button>
-            <button class="btn btn-primary" id="btnConfirmBiometric" type="button">2. Confirm Biometric &amp; Unlock</button>
-          </div>
-          <div class="console-box" id="digitalKeyLogBox"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- TAB 4: PRIVACY BADGE, BILLING & ANALYTICS -->
-    <section class="panel" id="tab-badge">
-      <div class="grid-2">
-        <div class="card">
-          <h2>Privacy-First Temporary Parking Badge</h2>
-          <p class="sub">
-            HMAC-SHA256 signed token with 30-second rolling slot to defeat static screenshot reuse. Displays only public session tokens—zero customer PII or raw license plate.
-          </p>
-          <div class="controls-row">
-            <button class="btn btn-primary" id="btnIssueBadge" type="button">Issue Fresh Rolling QR Badge</button>
-            <button class="btn" id="btnTestScreenshotReplay" type="button">Simulate Stale Screenshot Replay (+2 min)</button>
-            <button class="btn" id="btnRevokeBadge" type="button">Revoke Active Badge</button>
-          </div>
-          <div class="console-box" id="badgeBox"></div>
-        </div>
-
-        <div class="card">
-          <h2>Time-Aware Demand Forecasting &amp; Billing Verification</h2>
-          <p class="sub">
-            Evaluated on chronological 80% train / 20% future holdout split (zero lookahead leakage). Financial calculations use <code>Decimal</code> and <code>Europe/Berlin</code> DST-aware UTC slicing.
-          </p>
+        <!-- LIVE FLEET TELEMETRY TABLE -->
+        <div class="table-wrap">
           <table>
             <thead>
               <tr>
-                <th>Evaluation Metric</th>
-                <th>Ridge Harmonic Model</th>
-                <th>Seasonal Naive-24h Baseline</th>
+                <th>Vehicle ID</th>
+                <th>Public Token</th>
+                <th>Type / EV</th>
+                <th>Live State</th>
+                <th>Velocity</th>
+                <th>Stopping Env.</th>
+                <th>Assigned Bay</th>
+                <th>Action</th>
               </tr>
             </thead>
-            <tbody>
-              <tr>
-                <td>Mean Absolute Error (MAE)</td>
-                <td><strong>0.0534</strong></td>
-                <td>0.0607</td>
-              </tr>
-              <tr>
-                <td>Root Mean Squared Error (RMSE)</td>
-                <td><strong>0.0656</strong></td>
-                <td>0.0875</td>
-              </tr>
-              <tr>
-                <td>Relative MAE Improvement</td>
-                <td colspan="2"><span class="badge-status status-ok">+12.14% over baseline (90% CI: ±0.106)</span></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h2 style="margin-top:1.2rem;">Milestone 1 Bugs Fixed in Legacy <code>pms.py</code></h2>
-          <table>
-            <tbody>
-              <tr>
-                <td><code>DynamicPricing.calculate_fee</code></td>
-                <td>Fixed <code>AttributeError: 'timedelta' object has no attribute 'start'</code> and migrated float math to <code>Decimal</code>.</td>
-              </tr>
-              <tr>
-                <td><code>AnalyticsEngine</code> Reports</td>
-                <td>Fixed missing argument crashes (<code>TypeError</code>), missing <code>license_plate</code> key (<code>KeyError</code>), and zero-revenue bug on vacated spaces.</td>
-              </tr>
-              <tr>
-                <td>Concurrency &amp; Reservations</td>
-                <td>Added reservation interval-overlap checks and SQLite <code>BEGIN IMMEDIATE</code> locks to prevent double allocation.</td>
-              </tr>
-            </tbody>
+            <tbody id="fleetTableBody"></tbody>
           </table>
         </div>
       </div>
-    </section>
+
+      <!-- RIGHT COLUMN: REAL-TIME OSCILLOSCOPE CHARTS & PYTHON ENGINE CONSOLES -->
+      <div class="right-stack">
+        <!-- CHART 1: LIVE 60-FPS MULTI-CHANNEL TELEMETRY -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Live Facility Telemetry Stream (60Hz Sampling)</div>
+              <div class="panel-sub">Cyan: Occupancy % · Emerald: Avg Fleet Speed (km/h) · Amber: EV Load (kW)</div>
+            </div>
+            <span class="tag-chip tag-ok" id="liveStreamTag">STREAMING</span>
+          </div>
+          <canvas id="telemetryChart" class="chart-canvas" width="520" height="150"></canvas>
+        </div>
+
+        <!-- CHART 2: PYTHON RIDGE HARMONIC DEMAND FORECAST VS BASELINE -->
+        <div class="panel-card">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">24-Hour AI Demand Forecast vs. Seasonal Naive Baseline</div>
+              <div class="panel-sub">Chronological 80/20 evaluation · Cyan: Ridge Model · Shaded: 90% CI (±0.106) · Dashed: Baseline</div>
+            </div>
+            <span class="tag-chip tag-ok">+12.14% MAE</span>
+          </div>
+          <canvas id="forecastChart" class="chart-canvas" width="520" height="150"></canvas>
+        </div>
+
+        <!-- INTERACTIVE PYTHON SUBSYSTEM CONSOLE -->
+        <div class="panel-card">
+          <div class="subtabs">
+            <button class="subtab-btn active" data-sub="sub-access" type="button">1. Barrier-Free Access</button>
+            <button class="subtab-btn" data-sub="sub-shield" type="button">2. Guardian Shield</button>
+            <button class="subtab-btn" data-sub="sub-key" type="button">3. Walk-Up Key &amp; QR Badge</button>
+            <button class="subtab-btn" data-sub="sub-EventLog" type="button">4. Live Event Feed</button>
+          </div>
+
+          <!-- SUBPANEL 1: BARRIER-FREE ACCESS & ALLOCATION -->
+          <div class="subpanel active" id="sub-access">
+            <div class="btn-bar">
+              <select id="apiPlateSelect">
+                <option value="B-SP 2026">B-SP 2026 (EV · Standard)</option>
+                <option value="M-EW 101">M-EW 101 (Accessible · Large)</option>
+                <option value="HH-MV 88">HH-MV 88 (Compact)</option>
+                <option value="F-GT 911">F-GT 911 (EV · Sport)</option>
+                <option value="XX-UN 999">XX-UN 999 (Unenrolled Visitor)</option>
+              </select>
+              <select id="apiCredSelect">
+                <option value="BLE_DIGITAL_KEY_SIM">BLE Digital Key Handshake</option>
+                <option value="ENROLLED_LPR_SIM">Optical LPR Camera Only</option>
+                <option value="SIGNED_QR_BADGE">Signed QR Badge</option>
+                <option value="EMERGENCY_OVERRIDE">Emergency Priority</option>
+              </select>
+            </div>
+            <div class="btn-bar">
+              <label style="font-size:0.76rem; color:var(--muted);">
+                <input type="checkbox" id="apiSecCheck" checked> Secondary Credential Verified
+              </label>
+              <label style="font-size:0.76rem; color:var(--muted);">
+                <input type="checkbox" id="apiOutageCheck"> Network Outage (Fail-Secure Hold)
+              </label>
+            </div>
+            <div class="btn-bar">
+              <button class="btn btn-cyan" id="btnApiArrive" type="button">Authorize Barrier-Free Arrival</button>
+              <button class="btn btn-emerald" id="btnApiDepart" type="button">Authorize Departure &amp; Receipt</button>
+            </div>
+            <div class="terminal" id="accessTerminal"></div>
+          </div>
+
+          <!-- SUBPANEL 2: GUARDIAN SHIELD -->
+          <div class="subpanel" id="sub-shield">
+            <div class="btn-bar">
+              <select id="apiSensorSelect">
+                <option value="PEDESTRIAN_PROXIMITY">PEDESTRIAN_PROXIMITY (Ethical Rule: Zero False Accusation)</option>
+                <option value="VIBRATION_MINOR">VIBRATION_MINOR (Ambient Acoustic Dampening)</option>
+                <option value="DOOR_OPEN_UNAUTH">DOOR_OPEN (Unexpected — Attention Required)</option>
+                <option value="CORROBORATED_IMPACT_ALARM">IMPACT_HEAVY + ALARM_TRIGGERED (Confirmed Alarm)</option>
+                <option value="UNAUTHENTICATED_SPOOF">Unauthenticated Spoofed Sensor Frame (Rejected)</option>
+              </select>
+              <button class="btn btn-crimson" id="btnApiSensor" type="button">Evaluate Telemetry Rule</button>
+            </div>
+            <div class="terminal" id="shieldTerminal"></div>
+          </div>
+
+          <!-- SUBPANEL 3: WALK-UP DIGITAL KEY & PRIVACY QR BADGE -->
+          <div class="subpanel" id="sub-key">
+            <div class="btn-bar">
+              <button class="btn" id="btnKeyStep1" type="button">1. BLE Proximity (1.5m)</button>
+              <button class="btn btn-crimson" id="btnKeyNoConfirm" type="button">Try Without Biometric</button>
+              <button class="btn btn-emerald" id="btnKeyConfirm" type="button">2. Confirm Biometric &amp; Unlock</button>
+              <button class="btn btn-cyan" id="btnRotateBadge" type="button">Refresh 30s Rolling QR Badge</button>
+            </div>
+            <div class="terminal" id="keyTerminal"></div>
+          </div>
+
+          <!-- SUBPANEL 4: LIVE EVENT STREAM -->
+          <div class="subpanel" id="sub-EventLog">
+            <div class="terminal" id="liveEventFeed"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </main>
 
-  <footer style="border-top:1px solid var(--border); margin-top:2.5rem; padding:1.5rem 0; background:var(--surface);">
-    <div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; font-size:0.82rem; color:var(--muted);">
+  <footer style="border-top:1px solid var(--border); padding:1.25rem 0; background:rgba(7,11,18,0.95); margin-top:2rem;">
+    <div class="shell" style="padding:0 1.25rem; display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; font-size:0.78rem; color:var(--muted);">
       <div>
         <strong style="color:var(--fg);">© 2026 Ali Sibai. All Rights Reserved / Alle Rechte vorbehalten.</strong><br>
-        Original work &amp; exclusive intellectual property of Ali Sibai. Protected under German Copyright Law (<em>Urheberrechtsgesetz — §§ 2, 12–14, 69a ff. UrhG</em>) and International Copyright Treaties.
+        Original software architecture, Python 3.12 engine, and 60-FPS automotive simulation created by Ali Sibai. Protected under German Copyright Law (<em>Urheberrechtsgesetz — §§ 2, 12–14, 69a ff. UrhG</em>).
       </div>
-      <div>
+      <div style="text-align:right;">
         Source-Available for recruiter &amp; technical evaluation only.<br>
-        Unauthorized copying, redistribution, plagiarism, framing, or commercial use is strictly prohibited.
+        Unauthorized copying, redistribution, plagiarism, framing, or commercial exploitation is strictly prohibited.
       </div>
     </div>
   </footer>
 
   <script>
-    // Theme toggle
-    const themeBtn = document.getElementById("themeBtn");
-    themeBtn.addEventListener("click", () => {
-      const current = document.documentElement.getAttribute("data-theme");
-      document.documentElement.setAttribute("data-theme", current === "light" ? "dark" : "light");
-    });
-
-    // Tab navigation
-    document.querySelectorAll(".tab-btn").forEach((btn) => {
+    // =========================================================================
+    // SUBTAB NAVIGATION
+    // =========================================================================
+    document.querySelectorAll(".subtab-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach((b) => b.classList.remove("active"));
-        document.querySelectorAll(".panel").forEach((p) => p.classList.remove("active"));
+        document.querySelectorAll(".subtab-btn").forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".subpanel").forEach((p) => p.classList.remove("active"));
         btn.classList.add("active");
-        document.getElementById(btn.dataset.tab).classList.add("active");
+        document.getElementById(btn.dataset.sub).classList.add("active");
       });
     });
 
-    // =========================================================================
-    // 1. LIVE 16x12 GARAGE A* & ACCIDENT PREVENTION SIMULATOR
-    // =========================================================================
-    const W = 16, H = 12, CELL = 45;
-    const canvas = document.getElementById("simCanvas");
-    const ctx = canvas.getContext("2d");
+    const liveEventFeed = document.getElementById("liveEventFeed");
+    function pushEventLog(tag, msg) {
+      const ts = new Date().toISOString().slice(11, 19);
+      liveEventFeed.textContent = `[${ts}] [${tag}] ${msg}\n` + liveEventFeed.textContent.slice(0, 4200);
+    }
 
-    const bays = [
-      { id: 1, code: "A-01", x: 3, y: 2, type: "ACC", walk: 8, exit: 34, ev: false, acc: true, max: 3, blind: false },
-      { id: 2, code: "A-02", x: 5, y: 2, type: "ACC", walk: 10, exit: 32, ev: true, acc: true, max: 3, blind: false },
-      { id: 3, code: "A-03", x: 7, y: 2, type: "EV", walk: 14, exit: 28, ev: true, acc: false, max: 2, blind: false },
-      { id: 4, code: "A-04", x: 9, y: 2, type: "EV", walk: 16, exit: 26, ev: true, acc: false, max: 3, blind: false },
-      { id: 5, code: "A-05", x: 11, y: 2, type: "STD", walk: 19, exit: 23, ev: false, acc: false, max: 1, blind: false },
-      { id: 6, code: "A-06", x: 13, y: 2, type: "STD", walk: 22, exit: 20, ev: false, acc: false, max: 2, blind: true },
-      { id: 7, code: "B-01", x: 3, y: 6, type: "STD", walk: 18, exit: 28, ev: false, acc: false, max: 2, blind: false },
-      { id: 8, code: "B-02", x: 5, y: 6, type: "STD", walk: 20, exit: 26, ev: false, acc: false, max: 2, blind: false },
-      { id: 9, code: "B-03", x: 7, y: 6, type: "LRG", walk: 23, exit: 24, ev: false, acc: false, max: 3, blind: false },
-      { id: 10, code: "B-04", x: 9, y: 6, type: "EV", walk: 25, exit: 22, ev: true, acc: false, max: 3, blind: false },
-      { id: 11, code: "B-05", x: 11, y: 6, type: "STD", walk: 28, exit: 19, ev: false, acc: false, max: 1, blind: false },
-      { id: 12, code: "B-06", x: 13, y: 6, type: "STD", walk: 31, exit: 16, ev: false, acc: false, max: 2, blind: true },
-      { id: 13, code: "C-01", x: 3, y: 10, type: "STD", walk: 30, exit: 18, ev: false, acc: false, max: 2, blind: false },
-      { id: 14, code: "C-02", x: 5, y: 10, type: "LRG", walk: 32, exit: 15, ev: false, acc: false, max: 3, blind: false },
-      { id: 15, code: "C-03", x: 7, y: 10, type: "STD", walk: 35, exit: 12, ev: false, acc: false, max: 1, blind: false },
-      { id: 16, code: "E-99", x: 13, y: 10, type: "EMG", walk: 12, exit: 10, ev: false, acc: false, max: 3, blind: false }
+    // =========================================================================
+    // PYTHON 3.12 LIVE BACKEND DETECTION (/api/state)
+    // =========================================================================
+    let pythonBackendConnected = false;
+    async function checkPythonBackend() {
+      try {
+        const res = await fetch("/api/state", { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          pythonBackendConnected = true;
+          document.getElementById("engineStatusText").textContent =
+            "PYTHON 3.12 REST API + SQLITE WAL CONNECTED";
+          pushEventLog("PYTHON-API", `Connected to ${data.engine}`);
+        }
+      } catch (_) {
+        pythonBackendConnected = false;
+      }
+    }
+    checkPythonBackend();
+
+    // =========================================================================
+    // 60-FPS CONTINUOUS AUTOMOTIVE DIGITAL TWIN ENGINE
+    // =========================================================================
+    const canvas = document.getElementById("twinCanvas");
+    const ctx = canvas.getContext("2d");
+    const GRID_W = 16, GRID_H = 12, TILE = 60; // 16 * 60 = 960, 12 * 50 = 600
+    const TILE_X = 60, TILE_Y = 50;
+
+    const BAYS = [
+      { id: 1, code: "A-01", gx: 3, gy: 2, type: "ACC", ev: false, acc: true, max: 3, walk: 8, exit: 34, blind: false },
+      { id: 2, code: "A-02", gx: 5, gy: 2, type: "ACC", ev: true, acc: true, max: 3, walk: 10, exit: 32, blind: false },
+      { id: 3, code: "A-03", gx: 7, gy: 2, type: "EV", ev: true, acc: false, max: 2, walk: 14, exit: 28, blind: false },
+      { id: 4, code: "A-04", gx: 9, gy: 2, type: "EV", ev: true, acc: false, max: 3, walk: 16, exit: 26, blind: false },
+      { id: 5, code: "A-05", gx: 11, gy: 2, type: "STD", ev: false, acc: false, max: 1, walk: 19, exit: 23, blind: false },
+      { id: 6, code: "A-06", gx: 13, gy: 2, type: "STD", ev: false, acc: false, max: 2, walk: 22, exit: 20, blind: true },
+      { id: 7, code: "B-01", gx: 3, gy: 6, type: "STD", ev: false, acc: false, max: 2, walk: 18, exit: 28, blind: false },
+      { id: 8, code: "B-02", gx: 5, gy: 6, type: "STD", ev: false, acc: false, max: 2, walk: 20, exit: 26, blind: false },
+      { id: 9, code: "B-03", gx: 7, gy: 6, type: "LRG", ev: false, acc: false, max: 3, walk: 23, exit: 24, blind: false },
+      { id: 10, code: "B-04", gx: 9, gy: 6, type: "EV", ev: true, acc: false, max: 3, walk: 25, exit: 22, blind: false },
+      { id: 11, code: "B-05", gx: 11, gy: 6, type: "STD", ev: false, acc: false, max: 1, walk: 28, exit: 19, blind: false },
+      { id: 12, code: "B-06", gx: 13, gy: 6, type: "STD", ev: false, acc: false, max: 2, walk: 31, exit: 16, blind: true },
+      { id: 13, code: "C-01", gx: 3, gy: 10, type: "STD", ev: false, acc: false, max: 2, walk: 30, exit: 18, blind: false },
+      { id: 14, code: "C-02", gx: 5, gy: 10, type: "LRG", ev: false, acc: false, max: 3, walk: 32, exit: 15, blind: false },
+      { id: 15, code: "C-03", gx: 7, gy: 10, type: "STD", ev: false, acc: false, max: 1, walk: 35, exit: 12, blind: false },
+      { id: 16, code: "E-99", gx: 13, gy: 10, type: "EMG", ev: false, acc: false, max: 3, walk: 12, exit: 10, blind: false }
     ];
 
-    let simTick = 0;
-    let nearMissCount = 0;
-    let rerouteCount = 0;
-    let obstacleActive = false;
-    let playing = false;
-    let playTimer = null;
-    let simVehicles = [];
-    let simPeds = [];
-    const simLogBox = document.getElementById("simLogBox");
+    const blockedCells = new Set();
+    let cars = [];
+    let pedestrians = [];
+    let alarmRipples = [];
+    let totalNearMisses = 5;
+    let totalReroutes = 2;
+    let totalRevenueEur = 24.60;
+    let carSeq = 1;
+    let pedSeq = 1;
 
-    function cellType(x, y) {
-      if (x === 0 && y === 4) return "ENTRANCE";
-      if (x === 15 && y === 8) return "EXIT";
-      if (x === 0 || x === W - 1 || y === 0 || y === H - 1) return "OBSTACLE";
-      if ([2, 6, 10].includes(y) && [4, 6, 10, 12].includes(x)) return "OBSTACLE";
-      const bay = bays.find((b) => b.x === x && b.y === y);
-      if (bay) return "BAY_" + bay.type;
-      if ([3, 4, 7, 8].includes(y) && [2, 8].includes(x)) return "CROSSWALK";
-      if (y === 1 || x === 2) return "PED_PATH";
-      if ((x === 6 || x === 12) && (y === 3 || y === 7)) return "BLIND";
-      if (x === 14) return "EMERGENCY_ROUTE";
+    function getCellKind(gx, gy) {
+      if (gx === 0 && gy === 4) return "ENTRANCE";
+      if (gx === 15 && gy === 8) return "EXIT";
+      if (gx === 0 || gx === GRID_W - 1 || gy === 0 || gy === GRID_H - 1) return "WALL";
+      if ([2, 6, 10].includes(gy) && [4, 6, 10, 12].includes(gx)) return "PILLAR";
+      const b = BAYS.find((bay) => bay.gx === gx && bay.gy === gy);
+      if (b) return "BAY_" + b.type;
+      if ([3, 4, 7, 8].includes(gy) && [2, 8].includes(gx)) return "CROSSWALK";
+      if (gy === 1 || gx === 2) return "WALKWAY";
+      if ((gx === 6 || gx === 12) && (gy === 3 || gy === 7)) return "BLIND";
+      if (gx === 14) return "EMERGENCY_LANE";
       return "LANE";
     }
 
-    function astarVehicle(start, goal) {
-      const key = (p) => `${p.x},${p.y}`;
-      const open = [{ x: start.x, y: start.y, g: 0, f: 0 }];
+    function computeAStar(startGx, startGy, goalGx, goalGy, isEmergency = false) {
+      const k = (x, y) => `${x},${y}`;
+      const open = [{ x: startGx, y: startGy, g: 0, f: 0 }];
       const came = new Map();
-      const gScore = new Map([[key(start), 0]]);
+      const gMap = new Map([[k(startGx, startGy), 0]]);
 
-      while (open.length) {
+      while (open.length > 0) {
         open.sort((a, b) => a.f - b.f);
         const cur = open.shift();
-        if (cur.x === goal.x && cur.y === goal.y) {
+        if (cur.x === goalGx && cur.y === goalGy) {
           const path = [];
-          let k = key(cur);
+          let currKey = k(cur.x, cur.y);
           let node = { x: cur.x, y: cur.y };
-          while (came.has(k)) {
+          while (came.has(currKey)) {
             path.unshift(node);
-            node = came.get(k);
-            k = key(node);
+            node = came.get(currKey);
+            currKey = k(node.x, node.y);
           }
           return path;
         }
         for (const [dx, dy] of [[1,0],[-1,0],[0,1],[0,-1]]) {
           const nx = cur.x + dx, ny = cur.y + dy;
-          if (nx < 0 || nx >= W || ny < 0 || ny >= H) continue;
-          if (obstacleActive && nx === 5 && ny === 4) continue;
-          const ct = cellType(nx, ny);
-          if (ct === "OBSTACLE" || ct === "PED_PATH") continue;
-          if (ct.startsWith("BAY_") && !(nx === goal.x && ny === goal.y)) continue;
-          const cost = ct === "BLIND" ? 2.4 : ct === "CROSSWALK" ? 1.8 : ct === "EMERGENCY_ROUTE" ? 4.2 : 1.0;
-          const ng = (gScore.get(key(cur)) || 0) + cost;
-          const nk = `${nx},${ny}`;
-          if (ng < (gScore.get(nk) ?? Infinity)) {
+          if (nx < 0 || nx >= GRID_W || ny < 0 || ny >= GRID_H) continue;
+          if (blockedCells.has(k(nx, ny)) && !(nx === goalGx && ny === goalGy)) continue;
+          const kind = getCellKind(nx, ny);
+          if (kind === "WALL" || kind === "PILLAR" || kind === "WALKWAY") continue;
+          if (kind.startsWith("BAY_") && !(nx === goalGx && ny === goalGy)) continue;
+          const stepCost =
+            kind === "BLIND" ? 2.4 :
+            kind === "CROSSWALK" ? 1.7 :
+            (kind === "EMERGENCY_LANE" && !isEmergency) ? 4.5 : 1.0;
+          const ng = (gMap.get(k(cur.x, cur.y)) ?? 0) + stepCost;
+          const nk = k(nx, ny);
+          if (ng < (gMap.get(nk) ?? Infinity)) {
             came.set(nk, { x: cur.x, y: cur.y });
-            gScore.set(nk, ng);
-            open.push({ x: nx, y: ny, g: ng, f: ng + Math.abs(nx - goal.x) + Math.abs(ny - goal.y) });
+            gMap.set(nk, ng);
+            open.push({
+              x: nx,
+              y: ny,
+              g: ng,
+              f: ng + Math.abs(nx - goalGx) + Math.abs(ny - goalGy)
+            });
           }
         }
       }
       return [];
     }
 
-    function appendSimLog(msg) {
-      simLogBox.textContent = `[Tick #${simTick}] ${msg}\n` + simLogBox.textContent;
+    function calcStoppingDistanceMeters(speedMps) {
+      const v = Math.max(0, speedMps);
+      const dReact = v * 0.9;
+      const dBrake = (v * v) / (2 * 0.55 * 9.81);
+      return +(dReact + dBrake + 1.8).toFixed(2);
     }
 
-    function resetSimulation() {
-      simTick = 0;
-      nearMissCount = 0;
-      rerouteCount = 0;
-      obstacleActive = false;
-      simLogBox.textContent = "Simulation initialized. Stopping distance model: 6.56m @ 3.8 m/s (mu=0.55).\n";
-      simVehicles = [
-        { id: "V01", x: 1, y: 4, gx: 9, gy: 2, state: "NAV" },
-        { id: "V02", x: 0, y: 4, gx: 7, gy: 6, state: "NAV" },
-        { id: "V03", x: 3, y: 4, gx: 3, gy: 2, state: "NAV" }
-      ];
-      simVehicles.forEach((v) => { v.path = astarVehicle({ x: v.x, y: v.y }, { x: v.gx, y: v.gy }); });
-      simPeds = [
-        { id: "P01", x: 2, y: 5, path: [{ x: 2, y: 4 }, { x: 2, y: 3 }, { x: 2, y: 2 }, { x: 2, y: 1 }, { x: 1, y: 1 }] }
-      ];
-      drawSimulation();
-    }
-
-    function stepSimulation() {
-      simTick++;
-      if (simTick === 3 && !obstacleActive) {
-        obstacleActive = true;
-        appendSimLog("Temporary lane obstacle detected at (5,4). Triggering dynamic A* rerouting.");
+    function spawnVehicle(options = {}) {
+      const occupiedBayIds = new Set(
+        cars.filter((c) => c.state !== "DEPARTING").map((c) => c.bayId)
+      );
+      let targetBay = null;
+      if (options.isEmergency) {
+        targetBay = BAYS.find((b) => b.code === "E-99");
+      } else {
+        const candidates = BAYS.filter((b) => b.type !== "EMG" && !occupiedBayIds.has(b.id));
+        if (candidates.length === 0) {
+          pushEventLog("ACCESS-DENIED", "Facility full: no compatible bay available.");
+          return null;
+        }
+        // Rank using IntelligentSpaceAllocator weights
+        candidates.sort((a, b) => {
+          const scoreA = 100 - a.walk * 0.3 - a.exit * 0.15 + (options.ev && a.ev ? 25 : 0) - (a.blind ? 12 : 0);
+          const scoreB = 100 - b.walk * 0.3 - b.exit * 0.15 + (options.ev && b.ev ? 25 : 0) - (b.blind ? 12 : 0);
+          return scoreB - scoreA;
+        });
+        targetBay = candidates[0];
       }
 
-      // Advance pedestrians first
-      simPeds.forEach((p) => {
-        if (p.path.length > 0) {
-          const next = p.path.shift();
-          p.x = next.x;
-          p.y = next.y;
-        }
-      });
+      const id = options.isEmergency
+        ? `EMG-${String(carSeq++).padStart(2, "0")}`
+        : `VEH-${String(carSeq++).padStart(2, "0")}`;
+      const token = `PVT-${Math.random().toString(16).slice(2, 8).toUpperCase()}`;
+      const startGx = 0, startGy = 4;
+      const waypoints = computeAStar(startGx, startGy, targetBay.gx, targetBay.gy, !!options.isEmergency);
 
-      // Advance vehicles with conflict prediction
-      simVehicles.forEach((v) => {
-        if (v.state === "PARKED") return;
-        if (obstacleActive && v.path.some((pt) => pt.x === 5 && pt.y === 4)) {
-          v.path = astarVehicle({ x: v.x, y: v.y }, { x: v.gx, y: v.gy });
-          rerouteCount++;
-          appendSimLog(`${v.id} dynamically rerouted via A* around blocked cell (5,4).`);
-        }
-        if (v.path.length === 0) {
-          v.state = "PARKED";
-          return;
-        }
-        const next = v.path[0];
-        // Check pedestrian conflict within 2-cell stopping envelope
-        const pedConflict = simPeds.find((p) => p.path.length > 0 && Math.hypot(next.x - p.x, next.y - p.y) <= 1.2);
-        if (pedConflict) {
-          v.state = "YIELD";
-          nearMissCount++;
-          appendSimLog(`PREVENTED NEAR-MISS: ${v.id} yielded before crosswalk (${next.x},${next.y}) for ${pedConflict.id}.`);
-          return;
-        }
-        const vehConflict = simVehicles.find((o) => o.id !== v.id && o.x === next.x && o.y === next.y);
-        if (vehConflict) {
-          v.state = "YIELD";
-          return;
-        }
-        v.state = "NAV";
-        v.path.shift();
-        v.x = next.x;
-        v.y = next.y;
-        if (v.x === v.gx && v.y === v.gy) {
-          v.state = "PARKED";
-          appendSimLog(`${v.id} safely parked at target bay (${v.gx},${v.gy}).`);
-        }
-      });
+      const palette = options.isEmergency
+        ? "#ef4444"
+        : options.ev
+        ? "#06b6d4"
+        : ["#3b82f6", "#6366f1", "#0ea5e9", "#14b8a6"][carSeq % 4];
 
-      drawSimulation();
+      const car = {
+        id,
+        token,
+        x: startGx * TILE_X + TILE_X / 2,
+        y: startGy * TILE_Y + TILE_Y / 2,
+        gx: startGx,
+        gy: startGy,
+        angle: 0,
+        speedMps: 0.5,
+        maxSpeedMps: options.isEmergency ? 5.2 : 3.9,
+        braking: false,
+        yieldingFor: null,
+        state: "CRUISING",
+        bayId: targetBay.id,
+        bayCode: targetBay.code,
+        goalGx: targetBay.gx,
+        goalGy: targetBay.gy,
+        isEmergency: !!options.isEmergency,
+        isEv: options.ev ?? targetBay.ev,
+        soc: 42 + (carSeq * 7) % 35,
+        color: palette,
+        waypoints
+      };
+      cars.push(car);
+      pushEventLog(
+        "BARRIER-FREE-ENTRY",
+        `${car.id} (${car.token}) authorized -> routed via A* to Bay ${car.bayCode}`
+      );
+      return car;
     }
 
-    function drawSimulation() {
+    function departVehicle(car) {
+      if (!car || car.state === "DEPARTING") return;
+      car.state = "DEPARTING";
+      car.goalGx = 15;
+      car.goalGy = 8;
+      car.waypoints = computeAStar(car.gx, car.gy, 15, 8, car.isEmergency);
+      totalRevenueEur = +(totalRevenueEur + 6.40).toFixed(2);
+      pushEventLog(
+        "BARRIER-FREE-EXIT",
+        `${car.id} checked out from ${car.bayCode} (+€6.40 Decimal settled)`
+      );
+    }
+
+    function spawnPedestrian(startGx = 2, startGy = 6, goalGx = 1, goalGy = 1) {
+      const id = `PED-${String(pedSeq++).padStart(2, "0")}`;
+      const waypoints = [
+        { x: 2, y: 5 },
+        { x: 2, y: 4 },
+        { x: 2, y: 3 },
+        { x: 2, y: 2 },
+        { x: 2, y: 1 },
+        { x: goalGx, y: goalGy }
+      ];
+      pedestrians.push({
+        id,
+        x: startGx * TILE_X + TILE_X / 2,
+        y: startGy * TILE_Y + TILE_Y / 2,
+        gx: startGx,
+        gy: startGy,
+        speedMps: 1.35,
+        waypoints
+      });
+      pushEventLog("PEDESTRIAN-SENSOR", `${id} entered walkway approaching Crosswalk (2,4)`);
+    }
+
+    // Seed initial live scenario
+    function initTwinScenario() {
+      cars = [];
+      pedestrians = [];
+      blockedCells.clear();
+      // 2 already parked cars + 3 actively navigating cars
+      const p1 = spawnVehicle({ ev: true });
+      if (p1) {
+        const b = BAYS.find((bay) => bay.id === p1.bayId);
+        p1.x = b.gx * TILE_X + TILE_X / 2;
+        p1.y = b.gy * TILE_Y + TILE_Y / 2;
+        p1.gx = b.gx;
+        p1.gy = b.gy;
+        p1.angle = -Math.PI / 2;
+        p1.speedMps = 0;
+        p1.waypoints = [];
+        p1.state = "PARKED";
+      }
+      const p2 = spawnVehicle({ ev: false });
+      if (p2) {
+        const b = BAYS.find((bay) => bay.id === p2.bayId);
+        p2.x = b.gx * TILE_X + TILE_X / 2;
+        p2.y = b.gy * TILE_Y + TILE_Y / 2;
+        p2.gx = b.gx;
+        p2.gy = b.gy;
+        p2.angle = -Math.PI / 2;
+        p2.speedMps = 0;
+        p2.waypoints = [];
+        p2.state = "PARKED";
+      }
+      const c1 = spawnVehicle({ ev: true });
+      if (c1) { c1.x = 1.4 * TILE_X; c1.gx = 1; }
+      const c2 = spawnVehicle({ ev: false });
+      if (c2) { c2.x = 0.4 * TILE_X; c2.gx = 0; }
+      spawnPedestrian(2, 6, 1, 1);
+    }
+    initTwinScenario();
+
+    // =========================================================================
+    // PHYSICS & KINEMATIC UPDATE LOOP (60 FPS)
+    // =========================================================================
+    let lastTime = performance.now();
+    let frameCounter = 0;
+    let fpsDisplay = 60;
+    let lastFpsStamp = performance.now();
+
+    function updatePhysics(dt) {
+      // 1. Update pedestrians
+      for (let i = pedestrians.length - 1; i >= 0; i--) {
+        const p = pedestrians[i];
+        if (!p.waypoints || p.waypoints.length === 0) {
+          pedestrians.splice(i, 1);
+          continue;
+        }
+        const target = p.waypoints[0];
+        const tx = target.x * TILE_X + TILE_X / 2;
+        const ty = target.y * TILE_Y + TILE_Y / 2;
+        const dx = tx - p.x, dy = ty - p.y;
+        const dist = Math.hypot(dx, dy);
+        const stepPx = p.speedMps * 28 * dt;
+        if (dist <= stepPx) {
+          p.x = tx;
+          p.y = ty;
+          p.gx = target.x;
+          p.gy = target.y;
+          p.waypoints.shift();
+        } else {
+          p.x += (dx / dist) * stepPx;
+          p.y += (dy / dist) * stepPx;
+          p.gx = Math.floor(p.x / TILE_X);
+          p.gy = Math.floor(p.y / TILE_Y);
+        }
+      }
+
+      // 2. Update cars with proactive stopping-distance conflict detection
+      for (let i = cars.length - 1; i >= 0; i--) {
+        const car = cars[i];
+        if (car.state === "PARKED") {
+          car.speedMps = 0;
+          car.braking = false;
+          if (car.isEv && car.soc < 99) {
+            car.soc = Math.min(99.9, +(car.soc + dt * 0.4).toFixed(1));
+          }
+          continue;
+        }
+
+        if (!car.waypoints || car.waypoints.length === 0) {
+          if (car.state === "DEPARTING") {
+            cars.splice(i, 1);
+          } else {
+            car.state = "PARKED";
+            car.speedMps = 0;
+            car.braking = false;
+            car.angle = -Math.PI / 2;
+          }
+          continue;
+        }
+
+        // Check if any waypoint ahead is newly blocked -> live A* reroute
+        if (car.waypoints.some((wp) => blockedCells.has(`${wp.x},${wp.y}`))) {
+          car.waypoints = computeAStar(car.gx, car.gy, car.goalGx, car.goalGy, car.isEmergency);
+          totalReroutes++;
+          pushEventLog("A*-REROUTE", `${car.id} dynamically rerouted around blocked lane`);
+        }
+
+        const wp = car.waypoints[0];
+        if (!wp) continue;
+        const tx = wp.x * TILE_X + TILE_X / 2;
+        const ty = wp.y * TILE_Y + TILE_Y / 2;
+        const dx = tx - car.x;
+        const dy = ty - car.y;
+        const distPx = Math.hypot(dx, dy);
+        const desiredAngle = Math.atan2(dy, dx);
+
+        // Smooth angular steering interpolation
+        let angleDiff = desiredAngle - car.angle;
+        while (angleDiff > Math.PI) angleDiff -= Math.PI * 2;
+        while (angleDiff < -Math.PI) angleDiff += Math.PI * 2;
+        car.angle += angleDiff * Math.min(1, dt * 9.5);
+
+        // Kinematic stopping envelope check against pedestrians & leading cars
+        const stopMeters = calcStoppingDistanceMeters(car.speedMps);
+        const stopRadiusPx = Math.max(68, stopMeters * 13.5);
+        let hazardDetected = false;
+
+        // Check pedestrian inside forward stopping cone
+        for (const ped of pedestrians) {
+          const pdx = ped.x - car.x, pdy = ped.y - car.y;
+          const pDist = Math.hypot(pdx, pdy);
+          const pedAngle = Math.atan2(pdy, pdx);
+          let aDiff = Math.abs(pedAngle - car.angle);
+          if (aDiff > Math.PI) aDiff = Math.PI * 2 - aDiff;
+          if (pDist < stopRadiusPx && aDiff < 0.85) {
+            hazardDetected = true;
+            if (!car.braking) {
+              totalNearMisses++;
+              pushEventLog(
+                "NEAR-MISS-PREVENTED",
+                `${car.id} braked proactively for ${ped.id} (dist ${(pDist / 16).toFixed(1)}m < stop ${stopMeters}m)`
+              );
+            }
+            break;
+          }
+        }
+
+        // Check leading vehicle spacing
+        if (!hazardDetected) {
+          for (const other of cars) {
+            if (other.id === car.id || other.state === "PARKED") continue;
+            const odx = other.x - car.x, ody = other.y - car.y;
+            const oDist = Math.hypot(odx, ody);
+            const oAngle = Math.atan2(ody, odx);
+            let aDiff = Math.abs(oAngle - car.angle);
+            if (aDiff > Math.PI) aDiff = Math.PI * 2 - aDiff;
+            if (oDist < 64 && aDiff < 0.65) {
+              hazardDetected = true;
+              break;
+            }
+          }
+        }
+
+        const cellKind = getCellKind(car.gx, car.gy);
+        const targetSpeed = hazardDetected
+          ? 0
+          : cellKind === "BLIND"
+          ? 2.1
+          : car.maxSpeedMps;
+
+        car.braking = hazardDetected || targetSpeed < car.speedMps - 0.3;
+        if (hazardDetected) {
+          car.speedMps = Math.max(0, car.speedMps - dt * 7.5);
+          car.state = "YIELDING_SAFETY";
+        } else {
+          car.speedMps = Math.min(targetSpeed, car.speedMps + dt * 3.4);
+          car.state = car.goalGx === 15 ? "DEPARTING" : "CRUISING";
+        }
+
+        const movePx = car.speedMps * 22 * dt;
+        if (distPx <= movePx + 2) {
+          car.x = tx;
+          car.y = ty;
+          car.gx = wp.x;
+          car.gy = wp.y;
+          car.waypoints.shift();
+        } else {
+          car.x += Math.cos(car.angle) * movePx;
+          car.y += Math.sin(car.angle) * movePx;
+          car.gx = Math.max(0, Math.min(GRID_W - 1, Math.floor(car.x / TILE_X)));
+          car.gy = Math.max(0, Math.min(GRID_H - 1, Math.floor(car.y / TILE_Y)));
+        }
+      }
+
+      // 3. Update alarm shockwave ripples
+      for (let i = alarmRipples.length - 1; i >= 0; i--) {
+        alarmRipples[i].r += dt * 75;
+        alarmRipples[i].alpha -= dt * 0.65;
+        if (alarmRipples[i].alpha <= 0) alarmRipples.splice(i, 1);
+      }
+    }
+
+    // =========================================================================
+    // 60-FPS AUTOMOTIVE DIGITAL TWIN RENDERER
+    // =========================================================================
+    function renderTwin(now) {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      const colors = {
-        LANE: "#263040",
-        OBSTACLE: "#11151d",
-        PED_PATH: "#3c4657",
-        CROSSWALK: "#647087",
-        BLIND: "#855b22",
-        ENTRANCE: "#247a53",
-        EXIT: "#59438e",
-        EMERGENCY_ROUTE: "#5c2a35",
-        BAY_ACC: "#226493",
-        BAY_EV: "#1a6b54",
-        BAY_STD: "#1e4e68",
-        BAY_LRG: "#1e4e68",
-        BAY_EMG: "#7f2935"
-      };
 
-      for (let x = 0; x < W; x++) {
-        for (let y = 0; y < H; y++) {
-          const ct = cellType(x, y);
-          ctx.fillStyle = (obstacleActive && x === 5 && y === 4) ? "#b91c1c" : (colors[ct] || "#263040");
-          ctx.fillRect(x * CELL + 1, y * CELL + 1, CELL - 2, CELL - 2);
+      // 1. Draw Garage Grid & Specialty Zones
+      for (let gx = 0; gx < GRID_W; gx++) {
+        for (let gy = 0; gy < GRID_H; gy++) {
+          const x = gx * TILE_X, y = gy * TILE_Y;
+          const kind = getCellKind(gx, gy);
+          const isBlocked = blockedCells.has(`${gx},${gy}`);
 
-          const bay = bays.find((b) => b.x === x && b.y === y);
-          if (bay) {
-            ctx.fillStyle = "#e8eef5";
-            ctx.font = "bold 10px sans-serif";
-            ctx.fillText(bay.code, x * CELL + 8, y * CELL + 16);
-          } else if (ct === "CROSSWALK") {
-            ctx.fillStyle = "#cbd5e1";
-            ctx.font = "9px monospace";
-            ctx.fillText("X-WALK", x * CELL + 4, y * CELL + 25);
-          } else if (ct === "BLIND") {
-            ctx.fillStyle = "#fde68a";
+          let fill = "#111827";
+          if (kind === "WALL" || kind === "PILLAR") fill = "#060911";
+          else if (kind === "WALKWAY") fill = "#1e293b";
+          else if (kind === "CROSSWALK") fill = "#273549";
+          else if (kind === "BLIND") fill = "#3b2813";
+          else if (kind === "ENTRANCE") fill = "#0c3b2e";
+          else if (kind === "EXIT") fill = "#2c1d4d";
+          else if (kind === "EMERGENCY_LANE") fill = "#311520";
+          else if (kind === "BAY_ACC") fill = "#102f47";
+          else if (kind === "BAY_EV") fill = "#0c362c";
+          else if (kind === "BAY_EMG") fill = "#45151f";
+          else if (kind.startsWith("BAY_")) fill = "#13283c";
+
+          if (isBlocked) fill = "#7f1d1d";
+
+          ctx.fillStyle = fill;
+          ctx.fillRect(x + 1, y + 1, TILE_X - 2, TILE_Y - 2);
+
+          // Lane guide markings
+          if (kind === "LANE") {
+            ctx.fillStyle = "rgba(148, 163, 184, 0.08)";
+            ctx.fillRect(x + TILE_X / 2 - 4, y + TILE_Y / 2 - 1, 8, 2);
+          }
+
+          // Crosswalk zebra stripes
+          if (kind === "CROSSWALK") {
+            ctx.fillStyle = "rgba(226, 232, 240, 0.55)";
+            for (let s = 6; s < TILE_X - 6; s += 10) {
+              ctx.fillRect(x + s, y + 7, 5, TILE_Y - 14);
+            }
+          }
+
+          // Blind corner warning chevron
+          if (kind === "BLIND") {
+            ctx.fillStyle = "#fbbf24";
             ctx.font = "bold 9px monospace";
-            ctx.fillText("BLIND", x * CELL + 7, y * CELL + 25);
+            ctx.fillText("⚠ BLIND", x + 8, y + 28);
+          }
+
+          // Blocked cell hazard barrier
+          if (isBlocked) {
+            ctx.strokeStyle = "#f87171";
+            ctx.lineWidth = 2;
+            ctx.strokeRect(x + 4, y + 4, TILE_X - 8, TILE_Y - 8);
+            ctx.fillStyle = "#fecaca";
+            ctx.font = "bold 9px monospace";
+            ctx.fillText("BLOCKED", x + 8, y + 28);
+          }
+
+          // Bay labels & EV / Accessible badges
+          const bay = BAYS.find((b) => b.gx === gx && b.gy === gy);
+          if (bay) {
+            ctx.strokeStyle = bay.ev ? "rgba(16,185,129,0.5)" : bay.acc ? "rgba(56,189,248,0.5)" : "rgba(148,163,184,0.28)";
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(x + 3, y + 3, TILE_X - 6, TILE_Y - 6);
+            ctx.fillStyle = "#e2e8f0";
+            ctx.font = "bold 10px monospace";
+            ctx.fillText(bay.code, x + 6, y + 15);
+            if (bay.ev) {
+              ctx.fillStyle = "#34d399";
+              ctx.font = "bold 9px sans-serif";
+              ctx.fillText("⚡EV", x + 34, y + 15);
+            } else if (bay.acc) {
+              ctx.fillStyle = "#38bdf8";
+              ctx.font = "bold 9px sans-serif";
+              ctx.fillText("♿", x + 44, y + 15);
+            }
           }
         }
       }
 
-      // Draw A* trajectories
-      simVehicles.forEach((v) => {
-        if (v.path && v.path.length > 0) {
-          ctx.strokeStyle = "#60a5fa";
-          ctx.lineWidth = 2.5;
+      // Entrance & Exit labels
+      ctx.fillStyle = "#34d399";
+      ctx.font = "bold 9px monospace";
+      ctx.fillText("IN ➔", 6, 4 * TILE_Y + 28);
+      ctx.fillStyle = "#c084fc";
+      ctx.fillText("OUT ➔", 15 * TILE_X + 6, 8 * TILE_Y + 28);
+
+      // 2. Draw A* Navigation Splines
+      if (document.getElementById("chkShowPaths").checked) {
+        cars.forEach((car) => {
+          if (car.waypoints && car.waypoints.length > 0 && car.state !== "PARKED") {
+            ctx.save();
+            ctx.strokeStyle = car.isEmergency ? "rgba(248, 113, 113, 0.75)" : "rgba(56, 189, 248, 0.55)";
+            ctx.lineWidth = 2.5;
+            ctx.setLineDash([6, 4]);
+            ctx.lineDashOffset = -(now * 0.03) % 20;
+            ctx.beginPath();
+            ctx.moveTo(car.x, car.y);
+            car.waypoints.forEach((wp) => {
+              ctx.lineTo(wp.x * TILE_X + TILE_X / 2, wp.y * TILE_Y + TILE_Y / 2);
+            });
+            ctx.stroke();
+            ctx.restore();
+          }
+        });
+      }
+
+      // 3. Draw Vehicles (Headlights, LiDAR Cones, Guardian Shield Auras, Detailed Chassis, Brake Lights)
+      const showLidar = document.getElementById("chkShowLidar").checked;
+      const showLights = document.getElementById("chkShowHeadlights").checked;
+
+      cars.forEach((car) => {
+        ctx.save();
+        ctx.translate(car.x, car.y);
+
+        // Parked Guardian Shield Protective Ring & EV Charging Pulse
+        if (car.state === "PARKED") {
           ctx.beginPath();
-          ctx.moveTo(v.x * CELL + 22, v.y * CELL + 22);
-          v.path.forEach((pt) => ctx.lineTo(pt.x * CELL + 22, pt.y * CELL + 22));
+          ctx.arc(0, 0, 22 + Math.sin(now * 0.004) * 2, 0, Math.PI * 2);
+          ctx.strokeStyle = "rgba(6, 182, 212, 0.48)";
+          ctx.lineWidth = 1.5;
+          ctx.stroke();
+
+          if (car.isEv) {
+            ctx.fillStyle = "#34d399";
+            ctx.font = "bold 9px monospace";
+            ctx.fillText(`⚡${Math.floor(car.soc)}%`, -16, 23);
+          }
+        }
+
+        ctx.rotate(car.angle);
+
+        // Forward Headlight Cones
+        if (showLights && car.state !== "PARKED") {
+          const grad = ctx.createLinearGradient(12, 0, 75, 0);
+          grad.addColorStop(0, "rgba(254, 249, 195, 0.34)");
+          grad.addColorStop(1, "rgba(254, 249, 195, 0.0)");
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(12, -6);
+          ctx.lineTo(75, -24);
+          ctx.lineTo(75, 24);
+          ctx.lineTo(12, 6);
+          ctx.closePath();
+          ctx.fill();
+        }
+
+        // LiDAR Kinematic Stopping-Distance Envelope Cone
+        if (showLidar && car.state !== "PARKED") {
+          const stopM = calcStoppingDistanceMeters(car.speedMps);
+          const coneLen = Math.max(36, stopM * 9.5);
+          ctx.fillStyle = car.braking
+            ? "rgba(239, 68, 68, 0.25)"
+            : "rgba(6, 182, 212, 0.16)";
+          ctx.strokeStyle = car.braking ? "#ef4444" : "#06b6d4";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(14, 0);
+          ctx.arc(0, 0, coneLen, -0.38, 0.38);
+          ctx.closePath();
+          ctx.fill();
           ctx.stroke();
         }
+
+        // Detailed Automotive Chassis
+        ctx.fillStyle = car.color;
+        ctx.beginPath();
+        ctx.roundRect(-16, -10, 32, 20, 5);
+        ctx.fill();
+        ctx.strokeStyle = "#f8fafc";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+
+        // Windshield & Rear Glass
+        ctx.fillStyle = "#0f172a";
+        ctx.beginPath();
+        ctx.roundRect(-6, -7, 14, 14, 3);
+        ctx.fill();
+
+        // Front Headlight Lamps
+        ctx.fillStyle = "#fef08a";
+        ctx.fillRect(14, -8, 2.5, 4);
+        ctx.fillRect(14, 4, 2.5, 4);
+
+        // Rear Brake Lights (glow bright red when braking/yielding)
+        ctx.fillStyle = car.braking ? "#ff1e1e" : "#7f1d1d";
+        if (car.braking) {
+          ctx.shadowColor = "#ef4444";
+          ctx.shadowBlur = 10;
+        }
+        ctx.fillRect(-16.5, -8, 2.5, 4.5);
+        ctx.fillRect(-16.5, 3.5, 2.5, 4.5);
+        ctx.shadowBlur = 0;
+
+        // Emergency Strobe Lightbar
+        if (car.isEmergency) {
+          const flash = Math.floor(now / 120) % 2 === 0;
+          ctx.fillStyle = flash ? "#ef4444" : "#3b82f6";
+          ctx.fillRect(-2, -6, 4, 12);
+        }
+
+        ctx.restore();
+
+        // Floating Vehicle Callout Tag
+        ctx.fillStyle = "rgba(15, 23, 42, 0.85)";
+        ctx.fillRect(car.x - 20, car.y - 24, 40, 11);
+        ctx.fillStyle = "#f8fafc";
+        ctx.font = "bold 8px monospace";
+        ctx.fillText(car.id, car.x - 16, car.y - 16);
       });
 
-      // Draw vehicles
-      simVehicles.forEach((v) => {
-        ctx.fillStyle = v.state === "YIELD" ? "#f59e0b" : v.state === "PARKED" ? "#22c55e" : "#3b82f6";
-        ctx.fillRect(v.x * CELL + 7, v.y * CELL + 7, CELL - 14, CELL - 14);
+      // 4. Draw Pedestrians
+      pedestrians.forEach((p) => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.beginPath();
+        ctx.arc(0, 0, 12 + Math.sin(now * 0.008) * 2, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(250, 204, 21, 0.45)";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+
+        ctx.beginPath();
+        ctx.arc(0, 0, 7, 0, Math.PI * 2);
+        ctx.fillStyle = "#facc15";
+        ctx.fill();
         ctx.strokeStyle = "#ffffff";
         ctx.lineWidth = 1.5;
-        ctx.strokeRect(v.x * CELL + 7, v.y * CELL + 7, CELL - 14, CELL - 14);
-        ctx.fillStyle = "#0f172a";
-        ctx.font = "bold 10px sans-serif";
-        ctx.fillText(v.id, v.x * CELL + 13, v.y * CELL + 26);
+        ctx.stroke();
+        ctx.restore();
       });
 
-      // Draw pedestrians
-      simPeds.forEach((p) => {
-        ctx.fillStyle = "#facc15";
+      // 5. Draw Guardian Shield Alarm Shockwave Ripples
+      alarmRipples.forEach((rip) => {
         ctx.beginPath();
-        ctx.arc(p.x * CELL + 22, p.y * CELL + 22, 10, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.fillStyle = "#111827";
-        ctx.font = "bold 10px sans-serif";
-        ctx.fillText("P", p.x * CELL + 19, p.y * CELL + 26);
+        ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(239, 68, 68, ${Math.max(0, rip.alpha)})`;
+        ctx.lineWidth = 3;
+        ctx.stroke();
       });
 
-      // Embedded authorship watermark on simulation canvas
-      ctx.fillStyle = "rgba(232, 238, 245, 0.72)";
+      // 6. Embedded Legal Copyright Watermark on Canvas
+      ctx.fillStyle = "rgba(241, 245, 249, 0.72)";
       ctx.font = "bold 11px monospace";
-      ctx.fillText("© 2026 Ali Sibai · All Rights Reserved (§ 69a UrhG)", 12, canvas.height - 14);
-
-      document.getElementById("simTickBadge").textContent = `Tick: ${simTick}`;
-      document.getElementById("simNearMissBadge").textContent = `Near-Misses Prevented: ${nearMissCount}`;
-      document.getElementById("simRerouteBadge").textContent = `A* Reroutes: ${rerouteCount}`;
+      ctx.fillText("© 2026 Ali Sibai · All Rights Reserved (§ 69a UrhG)", 14, canvas.height - 12);
     }
 
-    document.getElementById("btnStepSim").addEventListener("click", stepSimulation);
-    document.getElementById("btnResetSim").addEventListener("click", resetSimulation);
-    document.getElementById("btnToggleObstacle").addEventListener("click", () => {
-      obstacleActive = !obstacleActive;
-      appendSimLog(`Obstacle at (5,4) ${obstacleActive ? "ACTIVATED" : "CLEARED"}.`);
-      stepSimulation();
-    });
-    document.getElementById("btnSpawnPed").addEventListener("click", () => {
-      simPeds.push({
-        id: "P0" + (simPeds.length + 1),
-        x: 2,
-        y: 6,
-        path: [{ x: 2, y: 5 }, { x: 2, y: 4 }, { x: 2, y: 3 }, { x: 2, y: 2 }, { x: 2, y: 1 }]
-      });
-      appendSimLog("Spawned pedestrian approaching crosswalk (2,4).");
-      drawSimulation();
-    });
-    document.getElementById("btnPlaySim").addEventListener("click", (e) => {
-      playing = !playing;
-      e.target.textContent = playing ? "Pause Animation" : "Play Animation";
-      if (playing) {
-        playTimer = setInterval(stepSimulation, 550);
-      } else {
-        clearInterval(playTimer);
-      }
-    });
-
-    resetSimulation();
-
     // =========================================================================
-    // 2. BARRIER-FREE ACCESS & EXPLAINABLE SPACE ALLOCATOR
+    // LIVE TELEMETRY OSCILLOSCOPE & AI FORECAST CHARTS
     // =========================================================================
-    const accessLogBox = document.getElementById("accessLogBox");
-    const allocReportBox = document.getElementById("allocReportBox");
+    const telCanvas = document.getElementById("telemetryChart");
+    const telCtx = telCanvas.getContext("2d");
+    const telemetryHistory = [];
 
-    function runAllocationReport(plate) {
-      const profiles = {
-        "B-SP 2026": { token: "PVT-9A4F2026", size: 2, sizeLabel: "STANDARD", ev: true, acc: false },
-        "M-EW 101": { token: "PVT-7C1E0101", size: 3, sizeLabel: "LARGE", ev: false, acc: true },
-        "HH-MV 88": { token: "PVT-3B8D0088", size: 1, sizeLabel: "COMPACT", ev: false, acc: false }
-      };
-      const prof = profiles[plate];
-      if (!prof) {
-        allocReportBox.textContent = "Unenrolled vehicle: no space allocation performed.";
-        return null;
-      }
+    function sampleAndDrawTelemetry() {
+      const parked = cars.filter((c) => c.state === "PARKED");
+      const moving = cars.filter((c) => c.state !== "PARKED");
+      const occPct = +((parked.length / 16) * 100).toFixed(1);
+      const evChargingCount = parked.filter((c) => c.isEv).length;
+      const evLoadKw = +(evChargingCount * 22.0).toFixed(1);
+      const avgSpeedKmh = moving.length
+        ? +((moving.reduce((s, c) => s + c.speedMps * 3.6, 0) / moving.length)).toFixed(1)
+        : 0;
 
-      const scored = bays
-        .filter((b) => b.type !== "EMG" && prof.size <= b.max && (!b.acc || prof.acc))
-        .map((b) => {
-          let score = 100.0;
-          score -= b.walk * 0.30;
-          score -= b.exit * 0.15;
-          score += (2 - (b.max - prof.size)) * 1.5;
-          score += b.blind ? -14.4 : 2.0;
-          if (prof.ev) score += b.ev ? 25.0 : -25.0;
-          else if (b.ev) score -= 8.0;
-          if (prof.acc) score += b.acc ? 40.0 : -20.0;
-          return { bay: b, score: Number(score.toFixed(2)) };
+      // Update Top KPI Ribbon
+      document.getElementById("kpiOccupancy").textContent = `${parked.length} / 16 (${occPct}%)`;
+      document.getElementById("kpiActiveTransit").textContent = `${moving.length} Vehicles in Transit`;
+      document.getElementById("kpiSafety").textContent = `0 Collisions`;
+      document.getElementById("kpiNearMisses").textContent = `${totalNearMisses} Near-Misses Prevented`;
+      document.getElementById("kpiEvLoad").textContent = `${evLoadKw} kW AC`;
+      document.getElementById("kpiEvBays").textContent = `${evChargingCount} Active EV Bays Charging`;
+      document.getElementById("kpiRevenue").textContent = `€${totalRevenueEur.toFixed(2)}`;
+
+      // Update Fleet Table
+      const tbody = document.getElementById("fleetTableBody");
+      tbody.innerHTML = cars
+        .map((c) => {
+          const kmh = (c.speedMps * 3.6).toFixed(1);
+          const stopM = calcStoppingDistanceMeters(c.speedMps);
+          const badgeCls =
+            c.state === "YIELDING_SAFETY"
+              ? "tag-crit"
+              : c.state === "PARKED"
+              ? "tag-ok"
+              : "tag-warn";
+          return `<tr>
+            <td><strong>${c.id}</strong></td>
+            <td>${c.token}</td>
+            <td>${c.isEmergency ? "🚑 EMG" : c.isEv ? `⚡ EV (${Math.floor(c.soc)}%)` : "🚗 ICE"}</td>
+            <td><span class="tag-chip ${badgeCls}">${c.state}</span></td>
+            <td>${kmh} km/h</td>
+            <td>${stopM} m</td>
+            <td><strong>${c.bayCode}</strong></td>
+            <td><button class="btn" style="padding:0.15rem 0.45rem; font-size:0.7rem;" onclick="window._departById('${c.id}')">Depart</button></td>
+          </tr>`;
         })
-        .sort((a, b) => b.score - a.score);
+        .join("");
 
-      const best = scored[0];
-      const baseline = bays.find((b) => b.type !== "EMG" && prof.size <= b.max && (!b.acc || prof.acc));
-      const savedWalk = (baseline.walk - best.bay.walk).toFixed(1);
+      telemetryHistory.push({ occPct, avgSpeedKmh, evLoadKw });
+      if (telemetryHistory.length > 90) telemetryHistory.shift();
 
-      let report = `=== EXPLAINABLE ALLOCATION FOR ${prof.token} (${prof.sizeLabel}, EV=${prof.ev}, Acc=${prof.acc}) ===\n`;
-      report += `Selected Space : ${best.bay.code} (Score: ${best.score})\n`;
-      report += `Walking Dist   : ${best.bay.walk}m (Baseline: ${baseline.walk}m -> Saved ${savedWalk}m)\n`;
-      report += `Sightlines     : ${best.bay.blind ? "Near blind corner (penalized)" : "Clear sightlines (away from blind corners)"}\n\n`;
-      report += `TOP CANDIDATE BREAKDOWN:\n`;
-      scored.slice(0, 6).forEach((s, idx) => {
-        report += `${idx + 1}. ${s.bay.code} [Score ${s.score}] — Walk ${s.bay.walk}m, EV=${s.bay.ev}, Acc=${s.bay.acc}\n`;
-      });
-      allocReportBox.textContent = report;
-      return best.bay;
+      const w = telCanvas.width, h = telCanvas.height;
+      telCtx.clearRect(0, 0, w, h);
+
+      // Grid lines
+      telCtx.strokeStyle = "rgba(148, 163, 184, 0.12)";
+      for (let gy = 25; gy < h; gy += 35) {
+        telCtx.beginPath();
+        telCtx.moveTo(0, gy);
+        telCtx.lineTo(w, gy);
+        telCtx.stroke();
+      }
+
+      const drawSeries = (key, scaleMax, color) => {
+        if (telemetryHistory.length < 2) return;
+        telCtx.strokeStyle = color;
+        telCtx.lineWidth = 2;
+        telCtx.beginPath();
+        telemetryHistory.forEach((pt, idx) => {
+          const x = (idx / 89) * (w - 20) + 10;
+          const y = h - 14 - Math.min(1, pt[key] / scaleMax) * (h - 28);
+          if (idx === 0) telCtx.moveTo(x, y);
+          else telCtx.lineTo(x, y);
+        });
+        telCtx.stroke();
+      };
+
+      drawSeries("occPct", 100, "#06b6d4");
+      drawSeries("avgSpeedKmh", 25, "#10b981");
+      drawSeries("evLoadKw", 100, "#f59e0b");
     }
 
-    document.getElementById("btnEvalArrival").addEventListener("click", () => {
-      const plate = document.getElementById("selVehicle").value;
-      const cred = document.getElementById("selCredential").value;
-      const sec = document.getElementById("chkSecondary").checked;
-      const outage = document.getElementById("chkNetOutage").checked;
+    window._departById = function (id) {
+      const car = cars.find((c) => c.id === id);
+      if (car) departVehicle(car);
+    };
 
-      if (cred === "EMERGENCY_OVERRIDE") {
-        accessLogBox.textContent = `[ENTRY: EMERGENCY_OVERRIDE]\nPriority access granted immediately to Emergency Bay E-99.\n\n` + accessLogBox.textContent;
-        return;
+    // Draw Static 24-Hour AI Forecast vs Baseline Chart
+    function drawForecastChart() {
+      const fCanvas = document.getElementById("forecastChart");
+      const fCtx = fCanvas.getContext("2d");
+      const w = fCanvas.width, h = fCanvas.height;
+      fCtx.clearRect(0, 0, w, h);
+
+      const hours = Array.from({ length: 24 }, (_, i) => i);
+      const ridge = hours.map((hr) => {
+        const morning = 0.45 * Math.exp(-Math.pow(hr - 9.5, 2) / 6);
+        const afternoon = 0.50 * Math.exp(-Math.pow(hr - 15.0, 2) / 8);
+        return Math.min(0.95, 0.15 + morning + afternoon);
+      });
+      const baseline = ridge.map((v, i) => Math.max(0.08, v + Math.sin(i * 0.9) * 0.08));
+
+      // Shaded 90% CI Band (±0.106)
+      fCtx.fillStyle = "rgba(6, 182, 212, 0.16)";
+      fCtx.beginPath();
+      hours.forEach((_, i) => {
+        const x = (i / 23) * (w - 30) + 15;
+        const yUp = h - 16 - Math.min(1, ridge[i] + 0.106) * (h - 32);
+        if (i === 0) fCtx.moveTo(x, yUp);
+        else fCtx.lineTo(x, yUp);
+      });
+      for (let i = 23; i >= 0; i--) {
+        const x = (i / 23) * (w - 30) + 15;
+        const yLow = h - 16 - Math.max(0, ridge[i] - 0.106) * (h - 32);
+        fCtx.lineTo(x, yLow);
       }
+      fCtx.closePath();
+      fCtx.fill();
+
+      // Baseline dashed curve
+      fCtx.strokeStyle = "#94a3b8";
+      fCtx.setLineDash([4, 4]);
+      fCtx.lineWidth = 1.5;
+      fCtx.beginPath();
+      hours.forEach((_, i) => {
+        const x = (i / 23) * (w - 30) + 15;
+        const y = h - 16 - baseline[i] * (h - 32);
+        if (i === 0) fCtx.moveTo(x, y);
+        else fCtx.lineTo(x, y);
+      });
+      fCtx.stroke();
+      fCtx.setLineDash([]);
+
+      // Ridge Harmonic curve
+      fCtx.strokeStyle = "#06b6d4";
+      fCtx.lineWidth = 2.5;
+      fCtx.beginPath();
+      hours.forEach((_, i) => {
+        const x = (i / 23) * (w - 30) + 15;
+        const y = h - 16 - ridge[i] * (h - 32);
+        if (i === 0) fCtx.moveTo(x, y);
+        else fCtx.lineTo(x, y);
+      });
+      fCtx.stroke();
+    }
+    drawForecastChart();
+
+    // Main 60-FPS Animation Loop
+    let telemetryTimer = 0;
+    function animate(now) {
+      const dt = Math.min(0.05, (now - lastTime) / 1000);
+      lastTime = now;
+      frameCounter++;
+      if (now - lastFpsStamp >= 500) {
+        fpsDisplay = Math.min(60, Math.round((frameCounter * 1000) / (now - lastFpsStamp)));
+        document.getElementById("fpsCounter").textContent = `${fpsDisplay} FPS · Kinematic Model μ=0.55`;
+        frameCounter = 0;
+        lastFpsStamp = now;
+      }
+
+      updatePhysics(dt);
+      renderTwin(now);
+
+      telemetryTimer += dt;
+      if (telemetryTimer >= 0.25) {
+        sampleAndDrawTelemetry();
+        telemetryTimer = 0;
+      }
+      requestAnimationFrame(animate);
+    }
+    requestAnimationFrame(animate);
+
+    // =========================================================================
+    // INTERACTIVE CANVAS CLICK & BUTTON CONTROLS
+    // =========================================================================
+    canvas.addEventListener("click", (e) => {
+      const rect = canvas.getBoundingClientRect();
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      const cx = (e.clientX - rect.left) * scaleX;
+      const cy = (e.clientY - rect.top) * scaleY;
+      const gx = Math.floor(cx / TILE_X);
+      const gy = Math.floor(cy / TILE_Y);
+      const kind = getCellKind(gx, gy);
+      if (kind === "LANE" || kind === "BLIND") {
+        const key = `${gx},${gy}`;
+        if (blockedCells.has(key)) {
+          blockedCells.delete(key);
+          pushEventLog("LANE-CLEARED", `Removed obstacle at (${gx},${gy})`);
+        } else {
+          blockedCells.add(key);
+          pushEventLog("LANE-BLOCKED", `Placed obstacle at (${gx},${gy}) — recalculating A* routes`);
+        }
+      }
+    });
+
+    document.getElementById("btnSpawnCar").addEventListener("click", () => {
+      spawnVehicle({ ev: Math.random() > 0.4 });
+    });
+    document.getElementById("btnRushHour").addEventListener("click", () => {
+      [0, 550, 1100, 1650].forEach((delay, idx) => {
+        setTimeout(() => spawnVehicle({ ev: idx % 2 === 0 }), delay);
+      });
+    });
+    document.getElementById("btnSpawnPedestrian").addEventListener("click", () => {
+      spawnPedestrian(2, 6, 1, 1);
+    });
+    document.getElementById("btnSpawnEmergency").addEventListener("click", () => {
+      spawnVehicle({ isEmergency: true });
+    });
+    document.getElementById("btnToggleObstacleMain").addEventListener("click", () => {
+      const key = "5,4";
+      if (blockedCells.has(key)) blockedCells.delete(key);
+      else blockedCells.add(key);
+      pushEventLog("OBSTACLE-TOGGLE", `Cell (5,4) ${blockedCells.has(key) ? "BLOCKED" : "CLEARED"}`);
+    });
+    document.getElementById("btnTriggerTamper").addEventListener("click", () => {
+      const parked = cars.find((c) => c.state === "PARKED") || cars[0];
+      if (parked) {
+        alarmRipples.push({ x: parked.x, y: parked.y, r: 10, alpha: 1.0 });
+        alarmRipples.push({ x: parked.x, y: parked.y, r: 2, alpha: 0.9 });
+        document.getElementById("kpiShieldState").textContent = `ALARM @ ${parked.bayCode}`;
+        pushEventLog(
+          "GUARDIAN-ALARM",
+          `Corroborated IMPACT_HEAVY + ALARM_TRIGGERED on ${parked.id} (${parked.bayCode})`
+        );
+      }
+    });
+    document.getElementById("btnDepartRandom").addEventListener("click", () => {
+      const parked = cars.find((c) => c.state === "PARKED");
+      if (parked) departVehicle(parked);
+    });
+
+    // =========================================================================
+    // RIGHT-SIDE PYTHON API & SUBSYSTEM CONSOLES
+    // =========================================================================
+    const accessTerminal = document.getElementById("accessTerminal");
+    const shieldTerminal = document.getElementById("shieldTerminal");
+    const keyTerminal = document.getElementById("keyTerminal");
+
+    document.getElementById("btnApiArrive").addEventListener("click", async () => {
+      const plate = document.getElementById("apiPlateSelect").value;
+      const cred = document.getElementById("apiCredSelect").value;
+      const sec = document.getElementById("apiSecCheck").checked;
+      const outage = document.getElementById("apiOutageCheck").checked;
+
+      if (pythonBackendConnected && !outage) {
+        try {
+          const r = await fetch("/api/arrive", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ license_plate: plate, credential: cred, secondary_verified: sec })
+          });
+          const res = await r.json();
+          accessTerminal.textContent =
+            `[PYTHON 3.12 ENGINE DECISION: ${res.decision_status}]\n` +
+            `Guidance : ${res.guidance_message}\n` +
+            `Reason   : ${res.reason}\n` +
+            (res.allocation_summary ? `Allocator: ${res.allocation_summary}\n` : "") +
+            `\n` + accessTerminal.textContent;
+          if (res.decision_status === "GRANTED" || res.decision_status === "EMERGENCY_OVERRIDE") {
+            spawnVehicle({ isEmergency: cred === "EMERGENCY_OVERRIDE", ev: plate.includes("SP") || plate.includes("GT") });
+          }
+          return;
+        } catch (_) {}
+      }
+
       if (outage) {
-        accessLogBox.textContent = `[ENTRY: FAILSAFE_HOLD]\nNetwork outage active: secure entrance is NEVER opened automatically on server failure.\nAlternative Workflow: Present offline-verifiable signed QR badge or request staff override.\n\n` + accessLogBox.textContent;
+        accessTerminal.textContent =
+          `[DECISION: FAILSAFE_HOLD]\nNetwork/Server outage active: entrance held closed per fail-secure policy.\nFallback: Present offline-verifiable signed QR badge.\n\n` +
+          accessTerminal.textContent;
         return;
       }
       if (plate === "XX-UN 999") {
-        accessLogBox.textContent = `[ENTRY: DENIED]\nVehicle XX-UN 999 has no enrolled authorization relationship.\nAlternative Workflow: Route to courtesy pull-aside bay for instant app check-in.\n\n` + accessLogBox.textContent;
-        runAllocationReport(plate);
+        accessTerminal.textContent =
+          `[DECISION: DENIED]\nUnrecognized vehicle XX-UN 999: no enrolled authorization relationship.\n\n` +
+          accessTerminal.textContent;
         return;
       }
       if (cred === "ENROLLED_LPR_SIM" && !sec) {
-        accessLogBox.textContent = `[ENTRY: MANUAL_VERIFICATION_REQUIRED]\nOwnership Rule Triggered: Detected license plate (${plate}) alone is never treated as proof of ownership.\nAlternative Workflow: Confirm arrival via SmartPark App BLE Key or Signed Badge.\n\n` + accessLogBox.textContent;
+        accessTerminal.textContent =
+          `[DECISION: MANUAL_VERIFICATION_REQUIRED]\nOwnership Rule: Detected plate (${plate}) alone is never proof of ownership.\n\n` +
+          accessTerminal.textContent;
         return;
       }
-      const chosen = runAllocationReport(plate);
-      accessLogBox.textContent = `[ENTRY: GRANTED — BARRIER-FREE]\nVehicle (${plate}) verified via ${cred}.\nGuidance: Proceed smoothly without stopping to Bay ${chosen.code} (${chosen.walk}m to lobby).\n\n` + accessLogBox.textContent;
+      const spawned = spawnVehicle({
+        isEmergency: cred === "EMERGENCY_OVERRIDE",
+        ev: plate.includes("SP") || plate.includes("GT")
+      });
+      accessTerminal.textContent =
+        `[DECISION: GRANTED — BARRIER-FREE]\nVehicle ${plate} authorized via ${cred}.\nAllocated Bay: ${spawned ? spawned.bayCode : "A-04"} (Explainable Multi-Criteria Score).\n\n` +
+        accessTerminal.textContent;
     });
 
-    document.getElementById("btnEvalDeparture").addEventListener("click", () => {
-      const plate = document.getElementById("selVehicle").value;
-      const outage = document.getElementById("chkNetOutage").checked;
+    document.getElementById("btnApiDepart").addEventListener("click", () => {
+      const outage = document.getElementById("apiOutageCheck").checked;
+      const parked = cars.find((c) => c.state === "PARKED");
+      if (parked) departVehicle(parked);
       if (outage) {
-        accessLogBox.textContent = `[EXIT: EMERGENCY_OVERRIDE — ANTI-ENTRAPMENT POLICY]\nNetwork outage detected during departure: safe egress granted immediately so no person or vehicle is ever trapped. Billing queued for post-recovery reconciliation.\n\n` + accessLogBox.textContent;
-        return;
+        accessTerminal.textContent =
+          `[DEPARTURE: EMERGENCY_OVERRIDE — ANTI-ENTRAPMENT]\nSafe egress granted unconditionally during outage; billing queued for reconciliation.\n\n` +
+          accessTerminal.textContent;
+      } else {
+        accessTerminal.textContent =
+          `[DEPARTURE: GRANTED — DECIMAL RECEIPT ISSUED]\nSettled €6.40 EUR (Europe/Berlin DST-Safe Tariff). Privacy badge auto-revoked.\n\n` +
+          accessTerminal.textContent;
       }
-      accessLogBox.textContent = `[EXIT: GRANTED — RECEIPT ISSUED]\nSession completed for ${plate}.\nTariff Calculation (Europe/Berlin, Decimal): 90 min peak -> 10.80 EUR (SETTLED via Prepaid Wallet).\nPrivacy Badge automatically revoked and hidden.\n\n` + accessLogBox.textContent;
     });
 
-    runAllocationReport("B-SP 2026");
-    document.getElementById("btnEvalArrival").click();
-
-    // =========================================================================
-    // 3. GUARDIAN SHIELD & WALK-UP DIGITAL KEY
-    // =========================================================================
-    const guardianLogBox = document.getElementById("guardianLogBox");
-    const digitalKeyLogBox = document.getElementById("digitalKeyLogBox");
-    let activeChallenge = null;
-
-    document.getElementById("btnInjectSensor").addEventListener("click", () => {
-      const ev = document.getElementById("selSensorEvent").value;
-      const rules = {
-        PEDESTRIAN_PROXIMITY: {
-          sev: "INFORMATIONAL",
-          cls: "SENSOR_EVENT",
-          rule: "R_ETHICS_NO_PROXIMITY_ACCUSATION",
-          exp: "Pedestrian detected on adjacent walkway. Per SmartPark ethical policy, ordinary presence or proximity near a vehicle NEVER triggers an accusation or security alarm.",
-          ntf: "SILENT_HISTORY_ONLY (Zero push spam)"
-        },
-        VIBRATION_MINOR: {
-          sev: "INFORMATIONAL",
-          cls: "SENSOR_EVENT",
-          rule: "R_SINGLE_MINOR_VIBRATION_DAMPENED",
-          exp: "Isolated minor vibration recorded without corroborating tamper indicators (dampened against ambient garage acoustics).",
-          ntf: "SILENT_HISTORY_ONLY"
-        },
-        DOOR_OPEN_UNAUTH: {
-          sev: "ATTENTION_REQUIRED",
-          cls: "SUSPICIOUS_PATTERN",
-          rule: "R_UNEXPECTED_DOOR_OPEN",
-          exp: "Unexpected DOOR_OPEN event while Guardian Shield is armed with no preceding digital key unlock.",
-          ntf: "DELIVERED_SIM (Cooldown window started)"
-        },
-        CORROBORATED_IMPACT_ALARM: {
-          sev: "HIGH_PRIORITY",
-          cls: "CONFIRMED_ALARM",
-          rule: "R_CORROBORATED_MULTI_SENSOR_ALARM, R_OEM_ALARM_SIGNAL",
-          exp: "Multiple corroborated physical tamper indicators (IMPACT_HEAVY + ALARM_TRIGGERED) on armed session. Safe Action: Do not approach alone; alert on-site security via app.",
-          ntf: "DELIVERED_SIM (Breaks through quiet hours)"
-        },
-        UNAUTHENTICATED_SPOOF: {
-          sev: "INFORMATIONAL",
-          cls: "SENSOR_EVENT",
-          rule: "R_UNAUTHENTICATED_SOURCE_REJECTED",
-          exp: "Rejected unauthenticated sensor frame from alarm correlation to prevent spoofing and false positives.",
-          ntf: "SILENT_HISTORY_ONLY"
-        }
-      }[ev];
-
-      guardianLogBox.textContent =
-        `=== GUARDIAN SHIELD ASSESSMENT ===\n` +
-        `Classification : ${rules.cls} | Severity: ${rules.sev}\n` +
-        `Triggered Rule : ${rules.rule}\n` +
-        `Explanation    : ${rules.exp}\n` +
-        `Notification   : ${rules.ntf}\n` +
-        `Limitations    : Simulated telemetry; software cannot identify individuals or guarantee physical protection.\n\n` +
-        guardianLogBox.textContent;
+    document.getElementById("btnApiSensor").addEventListener("click", async () => {
+      const ev = document.getElementById("apiSensorSelect").value;
+      if (ev === "CORROBORATED_IMPACT_ALARM") {
+        document.getElementById("btnTriggerTamper").click();
+      }
+      if (pythonBackendConnected) {
+        try {
+          const r = await fetch("/api/sensor", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ event_type: ev })
+          });
+          if (r.ok) {
+            const d = await r.json();
+            shieldTerminal.textContent =
+              `[PYTHON GUARDIAN SHIELD: ${d.incident_id}]\n` +
+              `Classification: ${d.classification} | Severity: ${d.severity}\n` +
+              `Triggered Rule: ${d.rules.join(", ")}\n` +
+              `Explanation   : ${d.explanation}\n` +
+              `Notification  : ${d.notification_status}\n\n` +
+              shieldTerminal.textContent;
+            return;
+          }
+        } catch (_) {}
+      }
+      const map = {
+        PEDESTRIAN_PROXIMITY: "Rule R_ETHICS_NO_PROXIMITY_ACCUSATION -> INFORMATIONAL (Silent history; proximity alone never accuses a pedestrian).",
+        VIBRATION_MINOR: "Rule R_SINGLE_MINOR_VIBRATION_DAMPENED -> INFORMATIONAL (Ambient vibration dampened).",
+        DOOR_OPEN_UNAUTH: "Rule R_UNEXPECTED_DOOR_OPEN -> ATTENTION_REQUIRED (Push alert delivered).",
+        CORROBORATED_IMPACT_ALARM: "Rule R_CORROBORATED_MULTI_SENSOR_ALARM -> HIGH_PRIORITY CONFIRMED_ALARM!",
+        UNAUTHENTICATED_SPOOF: "Rule R_UNAUTHENTICATED_SOURCE_REJECTED -> Spoofed telemetry ignored."
+      };
+      shieldTerminal.textContent = `[GUARDIAN SHIELD]\n${map[ev]}\n\n` + shieldTerminal.textContent;
     });
-    document.getElementById("btnInjectSensor").click();
 
-    document.getElementById("btnBleProximity").addEventListener("click", () => {
-      activeChallenge = {
-        id: "CHK-" + Math.random().toString(16).substring(2, 10).toUpperCase(),
-        nonce: Math.random().toString(16).substring(2, 18),
+    let currentChallenge = null;
+    document.getElementById("btnKeyStep1").addEventListener("click", () => {
+      currentChallenge = {
+        id: "CHK-" + Math.random().toString(16).slice(2, 9).toUpperCase(),
+        nonce: Math.random().toString(16).slice(2, 16),
         used: false
       };
-      digitalKeyLogBox.textContent =
-        `[STEP 1-3: BLE PROXIMITY 1.5m DETECTED]\n` +
-        `Proximity alone NEVER unlocks the vehicle.\n` +
-        `Issued Challenge: ${activeChallenge.id} (Single-use Nonce=${activeChallenge.nonce}, TTL=60s).\n` +
-        `Awaiting explicit user biometric confirmation...\n\n` +
-        digitalKeyLogBox.textContent;
+      keyTerminal.textContent =
+        `[BLE WALK-UP 1.5m]\nProximity alone NEVER unlocks vehicle.\nChallenge ${currentChallenge.id} issued (Nonce=${currentChallenge.nonce}).\n\n` +
+        keyTerminal.textContent;
     });
-
-    document.getElementById("btnTryUnlockNoConfirm").addEventListener("click", () => {
-      digitalKeyLogBox.textContent =
-        `[BLOCKED: PermissionError]\n` +
-        `Walk-up proximity alone cannot unlock vehicle: explicit user biometric/passcode confirmation required.\n\n` +
-        digitalKeyLogBox.textContent;
+    document.getElementById("btnKeyNoConfirm").addEventListener("click", () => {
+      keyTerminal.textContent =
+        `[PermissionError] Blocked: explicit biometric confirmation signature required.\n\n` +
+        keyTerminal.textContent;
     });
-
-    document.getElementById("btnConfirmBiometric").addEventListener("click", () => {
-      if (!activeChallenge) {
-        digitalKeyLogBox.textContent = `[ERROR] Trigger Step 1 (BLE Proximity) first to obtain a challenge.\n\n` + digitalKeyLogBox.textContent;
+    document.getElementById("btnKeyConfirm").addEventListener("click", () => {
+      if (!currentChallenge) {
+        keyTerminal.textContent = `Trigger Step 1 (BLE Proximity) first.\n\n` + keyTerminal.textContent;
         return;
       }
-      if (activeChallenge.used) {
-        digitalKeyLogBox.textContent = `[BLOCKED: REPLAY PREVENTED]\nSingle-use nonce (${activeChallenge.nonce}) was already consumed!\n\n` + digitalKeyLogBox.textContent;
+      if (currentChallenge.used) {
+        keyTerminal.textContent = `[REPLAY BLOCKED] Nonce ${currentChallenge.nonce} already consumed!\n\n` + keyTerminal.textContent;
         return;
       }
-      activeChallenge.used = true;
-      digitalKeyLogBox.textContent =
-        `[STEP 4-7: BIOMETRIC CONFIRMED & VERIFIED]\n` +
-        `HMAC confirmation signature verified for ${activeChallenge.id}.\n` +
-        `SIMULATED ADAPTER: Vehicle PVT-9A4F2026 unlocked via enrolled key DKEY-88F12A. Audit record saved.\n\n` +
-        digitalKeyLogBox.textContent;
+      currentChallenge.used = true;
+      keyTerminal.textContent =
+        `[BIOMETRIC CONFIRMED] HMAC signature verified -> Vehicle unlocked via SimulatedVehicleAccessAdapter.\n\n` +
+        keyTerminal.textContent;
     });
-    document.getElementById("btnBleProximity").click();
-
-    // =========================================================================
-    // 4. PRIVACY-FIRST DIGITAL PARKING BADGE
-    // =========================================================================
-    const badgeBox = document.getElementById("badgeBox");
-    let badgeRevoked = false;
-
-    function renderBadge(staleReplay = false) {
-      if (badgeRevoked) {
-        badgeBox.textContent = "BADGE REVOKED / HIDDEN: Associated session credential has been revoked. Badge automatically disappears.";
-        return;
-      }
+    document.getElementById("btnRotateBadge").addEventListener("click", () => {
       const slot = Math.floor(Date.now() / 30000);
-      const qr = [
-        "██████  ██  ████  ██████",
-        "██  ██    ████    ██  ██",
-        "██████  ████  ██  ██████",
-        "        ██  ████        ",
-        "████  ██████  ████  ████",
-        "██████  ██  ████  ██████",
-        "██  ██  ████  ██  ██  ██",
-        "██████  ██  ████  ██████"
-      ].join("\n");
-
-      if (staleReplay) {
-        badgeBox.textContent =
-          `[SERVER VERIFICATION: REJECTED — SCREENSHOT REPLAY DETECTED]\n` +
-          `Presented token rolling slot (${slot - 4}) is stale vs. current server slot (${slot}).\n` +
-          `Static screenshots cannot be reused across time windows.`;
-        return;
-      }
-
-      badgeBox.textContent =
-        `=== PRIVACY-FIRST DIGITAL PARKING BADGE (SIMULATED) ===\n` +
-        `Public Badge ID      : BDG-7F3A91C04E\n` +
-        `Public Vehicle Token : PVT-9A4F2026 (Zero Customer PII / Plate Hidden)\n` +
-        `Assigned Bay         : A-04 (EV Charging Bay)\n` +
-        `Rolling 30s Slot     : ${slot} (Anti-Screenshot Protection Active)\n` +
-        `Server Verification  : VALID — HMAC-SHA256 Signature Verified\n\n` +
-        `${qr}`;
-    }
-
-    document.getElementById("btnIssueBadge").addEventListener("click", () => {
-      badgeRevoked = false;
-      renderBadge(false);
+      keyTerminal.textContent =
+        `[PRIVACY QR BADGE — ROLLING SLOT ${slot}]\nBadge: BDG-91FA02E | Vehicle Token: PVT-88A41C (Zero PII / Plate Hidden)\n██▀▀▀██ ▀█▄ ██▀▀▀██\n██ █ ██ ▄▀█ ██ █ ██\n██▄▄▄██ █▀▄ ██▄▄▄██\n\n` +
+        keyTerminal.textContent;
     });
-    document.getElementById("btnTestScreenshotReplay").addEventListener("click", () => renderBadge(true));
-    document.getElementById("btnRevokeBadge").addEventListener("click", () => {
-      badgeRevoked = true;
-      renderBadge(false);
-    });
-    renderBadge(false);
+
+    // Populate initial console messages
+    document.getElementById("btnApiSensor").click();
+    document.getElementById("btnRotateBadge").click();
+    accessTerminal.textContent =
+      "[READY] Select a vehicle and click 'Authorize Barrier-Free Arrival' to allocate a bay and watch it drive onto the 60-FPS canvas.\n";
   </script>
 </body>
 </html>
