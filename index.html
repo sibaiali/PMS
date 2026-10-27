@@ -3,9 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SmartPark Guardian AI | Barrier-Free, Intelligent &amp; Accident-Aware Parking Ecosystem</title>
-  <meta name="description" content="Interactive engineering demonstration of SmartPark Guardian AI: barrier-free access authorization, explainable space allocation, Guardian Shield vehicle security correlation, privacy-first QR badges, and A* accident-prevention simulation.">
+  <title>SmartPark Guardian AI | Barrier-Free, Intelligent &amp; Accident-Aware Parking Ecosystem — Ali Sibai</title>
+  <meta name="author" content="Ali Sibai">
+  <meta name="copyright" content="Copyright (c) 2026 Ali Sibai. All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG).">
+  <meta name="description" content="Interactive engineering demonstration of SmartPark Guardian AI by Ali Sibai: barrier-free access authorization, explainable space allocation, Guardian Shield vehicle security correlation, privacy-first QR badges, and A* accident-prevention simulation.">
   <meta name="theme-color" content="#0f141d">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareSourceCode",
+      "name": "SmartPark Guardian AI (Smart Parking Management System)",
+      "version": "2.0.0",
+      "programmingLanguage": ["Python 3.12", "SQLite", "JavaScript"],
+      "codeRepository": "https://github.com/sibaiali/PMS",
+      "url": "https://alisibai.vercel.app/smartpark.html",
+      "author": {
+        "@type": "Person",
+        "name": "Ali Sibai",
+        "url": "https://alisibai.vercel.app/"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "Ali Sibai",
+        "url": "https://alisibai.vercel.app/"
+      },
+      "copyrightHolder": {
+        "@type": "Person",
+        "name": "Ali Sibai",
+        "url": "https://alisibai.vercel.app/"
+      },
+      "copyrightYear": 2026,
+      "license": "https://github.com/sibaiali/PMS/blob/main/LICENSE"
+    }
+  </script>
   <style>
     :root {
       --bg: #0f141d;
@@ -526,6 +556,19 @@
     </section>
   </main>
 
+  <footer style="border-top:1px solid var(--border); margin-top:2.5rem; padding:1.5rem 0; background:var(--surface);">
+    <div class="container" style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:1rem; font-size:0.82rem; color:var(--muted);">
+      <div>
+        <strong style="color:var(--fg);">© 2026 Ali Sibai. All Rights Reserved / Alle Rechte vorbehalten.</strong><br>
+        Original work &amp; exclusive intellectual property of Ali Sibai. Protected under German Copyright Law (<em>Urheberrechtsgesetz — §§ 2, 12–14, 69a ff. UrhG</em>) and International Copyright Treaties.
+      </div>
+      <div>
+        Source-Available for recruiter &amp; technical evaluation only.<br>
+        Unauthorized copying, redistribution, plagiarism, framing, or commercial use is strictly prohibited.
+      </div>
+    </div>
+  </footer>
+
   <script>
     // Theme toggle
     const themeBtn = document.getElementById("themeBtn");
@@ -786,6 +829,11 @@
         ctx.font = "bold 10px sans-serif";
         ctx.fillText("P", p.x * CELL + 19, p.y * CELL + 26);
       });
+
+      // Embedded authorship watermark on simulation canvas
+      ctx.fillStyle = "rgba(232, 238, 245, 0.72)";
+      ctx.font = "bold 11px monospace";
+      ctx.fillText("© 2026 Ali Sibai · All Rights Reserved (§ 69a UrhG)", 12, canvas.height - 14);
 
       document.getElementById("simTickBadge").textContent = `Tick: ${simTick}`;
       document.getElementById("simNearMissBadge").textContent = `Near-Misses Prevented: ${nearMissCount}`;

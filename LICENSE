@@ -1,21 +1,61 @@
-MIT License
+PROPRIETARY & SOURCE-AVAILABLE EVALUATION LICENSE
+ALL RIGHTS RESERVED / ALLE RECHTE VORBEHALTEN
 
 Copyright (c) 2026 Ali Sibai
+Author & Creator: Ali Sibai (Marburg / Frankfurt Rhine-Main, Germany)
+Official Website: https://alisibai.vercel.app/
+GitHub Profile:   https://github.com/sibaiali
+Repository:       https://github.com/sibaiali/PMS
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+1. OWNERSHIP AND INTELLECTUAL PROPERTY RIGHTS
+This software, including all source code, algorithms, system architecture, database
+schemas, user interface designs, simulation models, graphics, and documentation
+comprising "SmartPark Guardian AI" and "Smart Parking Management System (PMS)"
+(collectively, the "Software"), is the original creation and exclusive intellectual
+property of Ali Sibai.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+The Software is protected by:
+- The German Copyright Act (Gesetz über Urheberrecht und verwandte Schutzrechte —
+  Urheberrechtsgesetz, UrhG), in particular §§ 2, 7, 12–14 (Urheberpersönlichkeitsrecht /
+  inalienable moral rights of authorship), and §§ 69a–69g UrhG (Protection of Computer
+  Programs);
+- European Union Copyright Directives (Directive 2009/24/EC on the legal protection
+  of computer programs); and
+- The Berne Convention for the Protection of Literary and Artistic Works and WIPO
+  Copyright Treaty (WCT).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+Under §§ 12–14 and § 29 UrhG, the authorship (Urheberschaft) of Ali Sibai is legally
+inalienable and cannot be transferred, waived, or appropriated by any third party.
+
+2. LIMITED GRANT FOR RECRUITER, ACADEMIC, AND TECHNICAL EVALUATION ONLY
+Permission is hereby granted solely to prospective employers, technical recruiters,
+admissions committees, and peer reviewers to:
+(a) View and inspect the source code and documentation in the official repository; and
+(b) Clone and execute the Software locally on a personal or corporate evaluation
+    machine for the sole purpose of verifying the technical qualifications and
+    engineering work of Ali Sibai.
+
+3. STRICT PROHIBITIONS
+Except as expressly permitted under Section 2 above, NO license or right is granted,
+whether express, implied, or by estoppel. Without the prior written consent of
+Ali Sibai, you may NOT:
+(a) Copy, reproduce, republish, upload, post, transmit, or distribute the Software
+    or any substantial portion thereof in any public or private repository;
+(b) Claim authorship, ownership, or credit for the Software, its architecture,
+    or its design (plagiarism and misappropriation are strictly prohibited);
+(c) Remove, obscure, alter, or falsify any copyright notices, authorship metadata,
+    watermarks, cryptographic attribution, or license files embedded in the Software;
+(d) Modify, adapt, translate, reverse-engineer, or create derivative works based on
+    the Software;
+(e) Frame, mirror, or re-host the web application or simulation interface on any
+    unauthorized domain or server; or
+(f) Use the Software or any part thereof for any commercial, production, or
+    revenue-generating purpose.
+
+4. DISCLAIMER OF WARRANTY & LIABILITY
+THE SOFTWARE IS PROVIDED "AS IS" FOR TECHNICAL DEMONSTRATION AND EVALUATION ONLY,
+WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED. IN NO EVENT SHALL THE AUTHOR OR
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY ARISING FROM
+THE USE OF OR INABILITY TO USE THE SOFTWARE.
+
+© 2026 Ali Sibai. All Rights Reserved. Alle Rechte vorbehalten.

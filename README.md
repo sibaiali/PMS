@@ -199,3 +199,15 @@ python -m unittest discover -s tests -v
 - [x] **Milestone 8**: Timezone/DST-safe `Decimal` billing, idempotent payments, refunds, and time-aware demand forecasting.
 - [x] **Milestone 9**: 25-test automated suite, 12-screen Tkinter desktop app, CI workflow, and documentation.
 - [ ] **Future Milestone 10**: Optional FastAPI REST/WebSocket mobile companion backend and OCPP 2.0.1 EV charger load management integration.
+
+---
+
+## 8. Copyright, Legal Ownership & Intellectual Property Protection
+
+**Copyright © 2026 Ali Sibai. All Rights Reserved / Alle Rechte vorbehalten.**
+
+This project (**SmartPark Guardian AI** / **PMS**), including all Python & JavaScript source code, software architecture, algorithms, database schemas, simulation models, user interfaces, and documentation, is the original creation and exclusive intellectual property of **Ali Sibai** ([https://alisibai.vercel.app/](https://alisibai.vercel.app/) | [https://github.com/sibaiali](https://github.com/sibaiali)).
+
+- **Legal Protection**: Protected under the **German Copyright Act (*Urheberrechtsgesetz — UrhG*, §§ 2, 7, 12–14, 69a–69g UrhG)**, EU Directive 2009/24/EC, and the Berne Convention. Under §§ 12–14 and § 29 UrhG, the authorship (*Urheberschaft*) of Ali Sibai is legally inalienable (*unübertragbar*).
+- **Source-Available for Evaluation Only**: Published exclusively for technical inspection and evaluation by prospective employers, recruiters, and academic reviewers.
+- **Strict Prohibition of Misappropriation**: Unauthorized copying, redistribution, removal of copyright notices (§ 95c UrhG), plagiarism, framing, or commercial use is strictly prohibited. See [`LICENSE`](LICENSE) and [`COPYRIGHT.md`](COPYRIGHT.md) for full legal terms.

@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Ali Sibai (https://alisibai.vercel.app | https://github.com/sibaiali).
+# All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG) & International Copyright Treaties.
+# Unauthorized copying, redistribution, plagiarism, or commercial use is strictly prohibited.
+
 """Domain entities, value objects, and enumerations for SmartPark Guardian AI."""
 
 from __future__ import annotations

@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Ali Sibai (https://alisibai.vercel.app | https://github.com/sibaiali).
+# All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG) & International Copyright Treaties.
+# Unauthorized copying, redistribution, plagiarism, or commercial use is strictly prohibited.
+
 """Legacy-compatible Smart Parking Management System entrypoint (Milestone 1).
 
 This module preserves the original classes and interactive CLI menu from the

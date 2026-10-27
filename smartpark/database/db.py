@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Ali Sibai (https://alisibai.vercel.app | https://github.com/sibaiali).
+# All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG) & International Copyright Treaties.
+# Unauthorized copying, redistribution, plagiarism, or commercial use is strictly prohibited.
+
 """Persistent SQLite database engine with schema migrations, foreign keys, and fail-safe controls."""
 
 from __future__ import annotations

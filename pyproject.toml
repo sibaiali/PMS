@@ -5,17 +5,27 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "smartpark-guardian-ai"
 version = "2.0.0"
-description = "Barrier-Free, Intelligent, Secure and Accident-Aware Parking Ecosystem"
+description = "Barrier-Free, Intelligent, Secure and Accident-Aware Parking Ecosystem — Exclusive Intellectual Property of Ali Sibai"
 readme = "README.md"
 requires-python = ">=3.11"
-license = {text = "MIT"}
+license = {file = "LICENSE"}
 authors = [
-  {name = "Ali Sibai"}
+  {name = "Ali Sibai", email = "alisibai01@gmail.com"}
+]
+classifiers = [
+  "License :: Other/Proprietary License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
 ]
 dependencies = [
   "tzdata>=2024.1",
   "pillow>=10.0.0",
 ]
+
+[project.urls]
+Homepage = "https://alisibai.vercel.app/smartpark.html"
+Repository = "https://github.com/sibaiali/PMS"
+Author = "https://alisibai.vercel.app/"
 
 [project.scripts]
 smartpark = "smartpark.__main__:main"

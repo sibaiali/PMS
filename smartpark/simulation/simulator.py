@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Ali Sibai (https://alisibai.vercel.app | https://github.com/sibaiali).
+# All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG) & International Copyright Treaties.
+# Unauthorized copying, redistribution, plagiarism, or commercial use is strictly prohibited.
+
 """Deterministic Multi-Agent Garage Simulator with Replay, Queueing, and PNG/Visual Rendering (Milestone 4 & 7)."""
 
 from __future__ import annotations
@@ -439,7 +443,7 @@ class GarageSimulator:
         )
         draw.text(
             (14, by0 + 60),
-            "Legend: Blue=Navigating Vehicle  Amber=Yielding for Safety  Green=Parked  Yellow Circle=Pedestrian  Stripes=Crosswalk",
+            "Legend: Blue=Nav  Amber=Yield  Green=Parked  Yellow=Pedestrian | (c) 2026 Ali Sibai - All Rights Reserved",
             fill=(135, 150, 175),
         )
 

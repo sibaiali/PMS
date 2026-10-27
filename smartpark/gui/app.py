@@ -1,3 +1,7 @@
+# Copyright (c) 2026 Ali Sibai (https://alisibai.vercel.app | https://github.com/sibaiali).
+# All Rights Reserved. Protected under German Urheberrechtsgesetz (UrhG) & International Copyright Treaties.
+# Unauthorized copying, redistribution, plagiarism, or commercial use is strictly prohibited.
+
 """SmartPark Guardian AI — 12-Screen Restrained Desktop Application (Section 13)."""
 
 from __future__ import annotations
@@ -69,7 +73,15 @@ class SmartParkDesktopApp:
 
         self._build_header()
         self.notebook = ttk.Notebook(self.root)
-        self.notebook.pack(fill=tk.BOTH, expand=True, padx=14, pady=(4, 14))
+        self.notebook.pack(fill=tk.BOTH, expand=True, padx=14, pady=(4, 4))
+
+        self.footer_frame = ttk.Frame(self.root, padding=(14, 6))
+        self.footer_frame.pack(fill=tk.X, side=tk.BOTTOM)
+        ttk.Label(
+            self.footer_frame,
+            text="© 2026 Ali Sibai — All Rights Reserved / Alle Rechte vorbehalten (§ 69a UrhG) | Exclusive Intellectual Property of Ali Sibai (github.com/sibaiali/PMS)",
+            font=("Segoe UI", 8, "bold"),
+        ).pack(side=tk.LEFT)
 
         # Build all 12 required screens
         self.tab_map = ttk.Frame(self.notebook, padding=12)
